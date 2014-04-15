@@ -28,7 +28,6 @@ public:
 	static bool serialize(ofstream&, const double&);
 	static bool serialize(ofstream&, const float&);
 	static bool serialize(ofstream&, const char&);
-protected:
 	SerializadorBinario();
 };
 

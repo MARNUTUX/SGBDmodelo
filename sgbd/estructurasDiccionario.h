@@ -8,30 +8,29 @@
 #ifndef ESTRUCTURASDICCIONARIO_H
 #define	ESTRUCTURASDICCIONARIO_H
 #include <cstring>
+#include <sstream>
 #include <list>
 using namespace std;
+
+struct columna {
+    string nombre;
+    string tipo;     
+};
+
+struct tabla {
+    string nombre;
+    string bloqueInicial;
+    string bloqueFinal;
+    list<columna> columnas;
+};
 
 struct tablespace {
     string nombre;
     string ruta;
     list<tabla> tablas;
-    tablespace();
-    int guardar();
 };
 
-struct tabla {
-    string nombre;
-    list<columna> columnas;
-    tabla();
-    int guardar();
-};
 
-struct columna {
-    string nombre;
-    string tipo;     
-    columna();
-    int guardar();
-};
 
 #endif	/* ESTRUCTURASDICCIONARIO_H */
 
