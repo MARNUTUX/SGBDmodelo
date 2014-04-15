@@ -3,6 +3,15 @@
 
 diccionarioDatos::diccionarioDatos() {
     abrir();
+    
+}
+
+int diccionarioDatos::createTablespace(tabla t, string nombre) {
+    tablespace tsdf;
+    tsdf.nombre = nombre;
+    tsdf.ruta = nombre.append(".dbf");
+    tsdf.tablas.push_front(t);
+    tablespaces.push_front(tsdf);
 }
 
 int diccionarioDatos::abrir() {
@@ -103,6 +112,19 @@ int diccionarioDatos::prueba() {
     tablespaces.push_front(ts);
     cout<<"prueba"<<endl;
 }
+
+int diccionarioDatos::agregarTabla(tabla t, string nombre = DEFAULT) {
+    tablespace ts;
+    for(std::list<tablespace>::iterator it = tablespaces.begin(); it != tablespaces.end(); ++it) {
+        ts = *it;
+        if(ts.nombre.compare(nombre)){
+            ts.tablas.push_front(t);
+        } else {
+           createTablespace(t, nombre);           
+        }
+    }
+}
+
 
 string diccionarioDatos::toString() {
     stringstream ss;
