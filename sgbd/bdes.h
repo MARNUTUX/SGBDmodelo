@@ -8,17 +8,20 @@
 #ifndef BDES_H
 #define	BDES_H
 
+#include "SerializadorBinario.h"
+
+
 class bdes {
 public: 
-    int lector();
-    int escritor();
-    int grabador();
-    int validador();
-    int borrador();
+    int lector(string);
+    int escritor(string, int);
+    int grabador(string, int);
+    int validador(string, int);
+    int borrador(string, int);
     int compresor();
     
 private:
-    
+    SerializadorBinario sb;
 };
 
 

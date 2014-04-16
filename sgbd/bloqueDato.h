@@ -8,18 +8,19 @@
 #ifndef BLOQUEDATO_H
 #define	BLOQUEDATO_H
 #include <cstring>
+#include "estructurasDiccionario.h"
 using namespace std;
 struct dato {
     string nombreColumna;
     string tipoDato;
     string valor;
+    int next;
 };
 
 struct bloqueDato {
-    string nombreTabla;
-    list<dato> datos;
-    int estado;
-    int next;
+    string tabla; // se guarda solo el nombre
+    int estado; 
+    int next; // -1 si esta pendiente
 };
 
 

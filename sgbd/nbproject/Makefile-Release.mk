@@ -36,6 +36,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 # Object Files
 OBJECTFILES= \
 	${OBJECTDIR}/SerializadorBinario.o \
+	${OBJECTDIR}/bdes.o \
 	${OBJECTDIR}/diccionarioDatos.o \
 	${OBJECTDIR}/main.o \
 	${OBJECTDIR}/sgbd.o
@@ -69,6 +70,11 @@ ${OBJECTDIR}/SerializadorBinario.o: SerializadorBinario.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/SerializadorBinario.o SerializadorBinario.cpp
+
+${OBJECTDIR}/bdes.o: bdes.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/bdes.o bdes.cpp
 
 ${OBJECTDIR}/diccionarioDatos.o: diccionarioDatos.cpp 
 	${MKDIR} -p ${OBJECTDIR}

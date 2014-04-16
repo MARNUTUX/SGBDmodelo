@@ -81,6 +81,7 @@ bool SerializadorBinario::serialize(ofstream &out, const string &s) {
 
 	size_t n = s.length() + 1;
 	out.write((char*)&n, sizeof(size_t));
+        
 
 	// Luego graba los caracteres componentes de la
 	// hilera.

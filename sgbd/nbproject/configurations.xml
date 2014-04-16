@@ -19,6 +19,7 @@
                    displayName="Source Files"
                    projectFiles="true">
       <itemPath>SerializadorBinario.cpp</itemPath>
+      <itemPath>bdes.cpp</itemPath>
       <itemPath>diccionarioDatos.cpp</itemPath>
       <itemPath>main.cpp</itemPath>
       <itemPath>sgbd.cpp</itemPath>
@@ -48,6 +49,8 @@
       <item path="SerializadorBinario.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="SerializadorBinario.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="bdes.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="bdes.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -89,6 +92,8 @@
       <item path="SerializadorBinario.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="SerializadorBinario.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="bdes.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="bdes.h" ex="false" tool="3" flavor2="0">
       </item>

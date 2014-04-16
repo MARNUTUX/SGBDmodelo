@@ -14,7 +14,7 @@
 class sgbd {
 public:
     int creador(tabla, string);
-    int insertor();
+    //int insertor(tabla, list<dato>, int, int);
     int actualizador();
     int borrador();
     int seleccionador();
