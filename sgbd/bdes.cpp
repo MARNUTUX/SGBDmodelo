@@ -14,7 +14,7 @@ int bdes::escritor(string ts, bloqueDato& bd, int& posNx, int& posInicial, int& 
     ofstream os;
     ts.append(".dbf");
     os.open(ts.c_str(), ios::in | ios::out | ios::binary);
-    if(!os.good()) 
+    if (!os.good())
         os.open(ts.c_str(), ios::in | ios::out | ios::trunc | ios::binary);
     os.seekp(posType);
     posInicial = os.tellp();
@@ -30,6 +30,35 @@ int bdes::lector(string ts, int pos, bloqueDato& bd) {
     is.seekg(pos);
     bd = *deserializarBloque(is);
     is.close();
+}
+
+int bdes::grabador(string ts, bloqueDato *bd, int* pos) {
+    ofstream os;
+    ts.append(".dbf");
+    os.open(ts.c_str(), ios::in | ios::out | ios::binary);
+    os.seekp(pos);
+    int posNx;
+    serializarBloque(os, bd, posNx);
+    os.close()
+    
+}
+
+int bdes::modificarNext(string ts, int& pos, int valor) {
+    ofstream os;
+    ts.append(".dbf");
+    os.open(ts.c_str(), ios::in | ios::out | ios::binary);
+    os.seekp(pos);
+    sb.serialize(os, valor);
+    os.close();
+}
+
+int bdes::borrador(string ts, int pos) {
+    ofstream os;
+    ts.append(".dbf");
+    os.open(ts.c_str(), ios::in | ios::out | ios::binary);
+    os.seekp(pos);
+    sb.serialize(os, 0);
+    os.close();
 }
 
 int bdes::serializarBloque(ofstream& os, bloqueDato& bd, int& posNx) {
