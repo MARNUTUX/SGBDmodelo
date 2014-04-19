@@ -18,10 +18,11 @@ public:
     ~bdes();
     int lector(string, int, bloqueDato&);
     int escritor(string,bloqueDato&, int&, int&, int&, int&);
-    int grabador();
-    int validador();
-    int borrador();
+    int grabador(string, bloqueDato*, int*);
+    int validador(string, int);
+    int borrador(string, int);
     int compresor();
+    int modificarNext(string, int&, int);
     
 private:
     int serializarBloque(ofstream&, bloqueDato&, int&);
