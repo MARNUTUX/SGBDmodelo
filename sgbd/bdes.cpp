@@ -12,7 +12,7 @@ bdes::~bdes() {
 }
 
 bloqueDato* getBloque() {
-    bloqueDato* bd = new bloqueDato();
+    bloqueDato* bd = new bloqueDato;
     bd->tabla = "tabla0";
     bd->estado = 1;
     bd->next = 0;
@@ -36,6 +36,7 @@ int bdes::escritor() {
 int bdes::lector() {
     ifstream is;
     is.open("prueba.dat", ios::in | ios::out | ios::binary);
+    deserializarBloque(is);
     is.close();
 }
 
@@ -57,7 +58,7 @@ int bdes::serializarDato(ofstream& os, dato d) {
 }
 
 bloqueDato* bdes::deserializarBloque(ifstream& is) {
-    bloqueDato* bd;
+    bloqueDato* bd = new bloqueDato;
     bd->tabla = sb.deserializeString(is);
     bd->estado = sb.deserializeInt(is);
     bd->next = sb.deserializeInt(is);
@@ -70,6 +71,7 @@ bloqueDato* bdes::deserializarBloque(ifstream& is) {
 dato bdes::deserializarDato(ifstream& is) {
     dato d;
     d.nombreColumna = sb.deserializeString(is);
+    printf("tabla-->%s\n", d.nombreColumna.c_str());
     d.tipoDato = sb.deserializeString(is);
     d.valor = sb.deserializeString(is);
     return d;

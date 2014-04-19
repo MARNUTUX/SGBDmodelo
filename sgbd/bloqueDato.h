@@ -14,11 +14,11 @@ struct dato {
     string nombreColumna;
     string tipoDato;
     string valor;
-    int next;
 };
 
 struct bloqueDato {
     string tabla; // se guarda solo el nombre
+    list<dato> datos; 
     int estado; 
     int next; // -1 si esta pendiente
 };

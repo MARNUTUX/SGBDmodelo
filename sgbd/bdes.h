@@ -7,21 +7,29 @@
 
 #ifndef BDES_H
 #define	BDES_H
-
+#include "bloqueDato.h"
 #include "SerializadorBinario.h"
 
 
-class bdes {
-public: 
-    int lector(string);
-    int escritor(string, int);
-    int grabador(string, int);
-    int validador(string, int);
-    int borrador(string, int);
+class bdes : public SerializadorBinario {
+    
+public:
+    bdes();
+    ~bdes();
+    int lector();
+    int escritor();
+    int grabador();
+    int validador();
+    int borrador();
     int compresor();
     
 private:
+    int serializarBloque(ofstream&, bloqueDato*);
+    int serializarDato(ofstream&, dato);
+    bloqueDato* deserializarBloque(ifstream&);
+    dato deserializarDato(ifstream&);
     SerializadorBinario sb;
+    
 };
 
 
