@@ -2,52 +2,44 @@
 
 #include "bdes.h"
 
-
 bdes::bdes() {
-    
+
 }
 
 bdes::~bdes() {
-    
+
 }
 
-bloqueDato* getBloque() {
-    bloqueDato* bd = new bloqueDato;
-    bd->tabla = "tabla0";
-    bd->estado = 1;
-    bd->next = 0;
-    dato d;
-    d.nombreColumna = "c0";
-    d.tipoDato = "int";
-    d.valor = "3";
-    bd->datos.push_front(d);
-    return bd;
-}
-
-int bdes::escritor() {
+int bdes::escritor(string ts, bloqueDato& bd, int& posNx, int& posInicial, int& posFinal, int& posType) {
     ofstream os;
-    os.open("prueba.dat", ios::trunc);
-    serializarBloque(os, getBloque());
+    ts.append(".dbf");
+    os.open(ts.c_str(), ios::in | ios::out | ios::binary);
+    if(!os.good()) 
+        os.open(ts.c_str(), ios::in | ios::out | ios::trunc | ios::binary);
+    os.seekp(posType);
+    posInicial = os.tellp();
+    serializarBloque(os, bd, posNx);
+    posFinal = os.tellp();
     os.close();
-    printf("escrito!!!\n");
-           
 }
 
-int bdes::lector() {
+int bdes::lector(string ts, int pos, bloqueDato& bd) {
     ifstream is;
-    is.open("prueba.dat", ios::in | ios::out | ios::binary);
-    deserializarBloque(is);
+    ts.append(".dbf");
+    is.open(ts.c_str(), ios::in | ios::out | ios::binary);
+    is.seekg(pos);
+    bd = *deserializarBloque(is);
     is.close();
 }
 
-int bdes::serializarBloque(ofstream& os, bloqueDato* bd) {
-    sb.serialize(os, bd->tabla);
-    sb.serialize(os, bd->estado);
-    sb.serialize(os, bd->next); //get pos
-    int tam = bd->datos.size();
-    os.tellp();
+int bdes::serializarBloque(ofstream& os, bloqueDato& bd, int& posNx) {
+    sb.serialize(os, bd.tabla);
+    sb.serialize(os, bd.estado);
+    sb.serialize(os, bd.next); //get pos
+    int tam = bd.datos.size();
+    posNx = os.tellp();
     sb.serialize(os, tam);
-    for(std::list<dato>::iterator it = bd->datos.begin(); it != bd->datos.end(); ++it)
+    for (std::list<dato>::iterator it = bd.datos.begin(); it != bd.datos.end(); ++it)
         serializarDato(os, *it);
 }
 
@@ -63,7 +55,7 @@ bloqueDato* bdes::deserializarBloque(ifstream& is) {
     bd->estado = sb.deserializeInt(is);
     bd->next = sb.deserializeInt(is);
     int tam = deserializeInt(is);
-    for(int i = 0; i < tam; i++)
+    for (int i = 0; i < tam; i++)
         bd->datos.push_front(deserializarDato(is));
     return bd;
 }
@@ -71,7 +63,6 @@ bloqueDato* bdes::deserializarBloque(ifstream& is) {
 dato bdes::deserializarDato(ifstream& is) {
     dato d;
     d.nombreColumna = sb.deserializeString(is);
-    printf("tabla-->%s\n", d.nombreColumna.c_str());
     d.tipoDato = sb.deserializeString(is);
     d.valor = sb.deserializeString(is);
     return d;

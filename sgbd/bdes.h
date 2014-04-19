@@ -16,15 +16,15 @@ class bdes : public SerializadorBinario {
 public:
     bdes();
     ~bdes();
-    int lector();
-    int escritor();
+    int lector(string, int, bloqueDato&);
+    int escritor(string,bloqueDato&, int&, int&, int&, int&);
     int grabador();
     int validador();
     int borrador();
     int compresor();
     
 private:
-    int serializarBloque(ofstream&, bloqueDato*);
+    int serializarBloque(ofstream&, bloqueDato&, int&);
     int serializarDato(ofstream&, dato);
     bloqueDato* deserializarBloque(ifstream&);
     dato deserializarDato(ifstream&);
