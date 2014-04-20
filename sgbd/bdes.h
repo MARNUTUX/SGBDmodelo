@@ -18,7 +18,7 @@ public:
     ~bdes();
     int lector(string, int, bloqueDato&);
     int escritor(string,bloqueDato&, int&, int&, int&, int&);
-    int grabador(string, bloqueDato*, int*);
+    int grabador(string, bloqueDato*, int);
     int validador(string, int);
     int borrador(string, int);
     int compresor();

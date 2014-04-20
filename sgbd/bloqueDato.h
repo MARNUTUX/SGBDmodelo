@@ -23,6 +23,7 @@ struct bloqueDato {
     int next; // -1 si esta pendiente
     // int pos inicial
     //int pos final no guardar solo para administrar.
+    //int tamano;
 };
 
 

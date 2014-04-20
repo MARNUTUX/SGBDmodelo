@@ -26,6 +26,7 @@ int bdes::escritor(string ts, bloqueDato& bd, int& posNx, int& posInicial, int& 
 
 // para select * from x -> lector(ts, pos = next anterior)
 // para cargar todas las tablas lector(ts, bd.posFinal)
+
 int bdes::lector(string ts, int pos, bloqueDato& bd) {
     ifstream is;
     ts.append(".dbf");
@@ -35,15 +36,15 @@ int bdes::lector(string ts, int pos, bloqueDato& bd) {
     is.close();
 }
 
-int bdes::grabador(string ts, bloqueDato *bd, int* pos) {
+int bdes::grabador(string ts, bloqueDato *bd, int pos) {
     ofstream os;
     ts.append(".dbf");
     os.open(ts.c_str(), ios::in | ios::out | ios::binary);
     os.seekp(pos);
     int posNx;
-    serializarBloque(os, bd, posNx);
+    serializarBloque(os, *bd, posNx);
     os.close();
-    
+
 }
 
 int bdes::modificarNext(string ts, int& pos, int valor) {
@@ -56,8 +57,16 @@ int bdes::modificarNext(string ts, int& pos, int valor) {
 }
 
 int bdes::borrador(string ts, int pos) {
-    ofstream os;
     ts.append(".dbf");
+    ifstream is;
+    is.open(ts.c_str(), ios::in | ios::out | ios::binary);
+    size_t n = 0;
+    is.read((char*) &n, sizeof (size_t));
+    int tam = n;
+    printf("tam----> %d \n", tam);
+    is.close();
+    ofstream os;
+
     os.open(ts.c_str(), ios::in | ios::out | ios::binary);
     os.seekp(pos);
     sb.serialize(os, 0);
