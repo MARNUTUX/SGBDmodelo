@@ -21,6 +21,8 @@ struct bloqueDato {
     list<dato> datos; 
     int estado; 
     int next; // -1 si esta pendiente
+    // int pos inicial
+    //int pos final no guardar solo para administrar.
 };
 
 

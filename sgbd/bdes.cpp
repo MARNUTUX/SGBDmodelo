@@ -23,6 +23,9 @@ int bdes::escritor(string ts, bloqueDato& bd, int& posNx, int& posInicial, int& 
     os.close();
 }
 
+
+// para select * from x -> lector(ts, pos = next anterior)
+// para cargar todas las tablas lector(ts, bd.posFinal)
 int bdes::lector(string ts, int pos, bloqueDato& bd) {
     ifstream is;
     ts.append(".dbf");
@@ -39,7 +42,7 @@ int bdes::grabador(string ts, bloqueDato *bd, int* pos) {
     os.seekp(pos);
     int posNx;
     serializarBloque(os, bd, posNx);
-    os.close()
+    os.close();
     
 }
 
