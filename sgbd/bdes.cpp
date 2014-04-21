@@ -32,18 +32,54 @@ int bdes::lector(string ts, int pos, bloqueDato& bd) {
     ts.append(".dbf");
     is.open(ts.c_str(), ios::in | ios::out | ios::binary);
     is.seekg(pos);
+    bd.posInicial = pos;
     bd = *deserializarBloque(is);
+    bd.posFinal = is.tellg();
     is.close();
 }
 
-int bdes::grabador(string ts, bloqueDato *bd, int pos) {
+int bdes::grabador(string ts, bloqueDato bd, int pos) {
     ofstream os;
     ts.append(".dbf");
     os.open(ts.c_str(), ios::in | ios::out | ios::binary);
     os.seekp(pos);
     int posNx;
-    serializarBloque(os, *bd, posNx);
+    serializarBloque(os, bd, posNx);
     os.close();
+
+}
+
+int bdes::validador(string ts, int pos) {
+    ts.append(".dbf");
+    int valido;
+    ifstream is;
+    is.seekg(getPosEstado(ts, pos));
+    valido = sb.deserializeInt(is);
+    is.close();
+    return valido;
+}
+
+int bdes::compresor(string ts) {
+    ofstream os;
+    ifstream is;
+    bloqueDato bd;
+    string str = ts;
+    str.append(".bak");
+    os.open(str.c_str(), ios::in | ios::out | ios::trunc | ios::binary);
+    ts.append(".dbf");
+    is.open(ts.c_str(), ios::in | ios::out | ios::binary);
+    int pivote = 0;
+    int posNx = 0;
+    bd = *deserializarBloque(is);
+    printf("posType--><%d\n", is.tellg());
+    serializarBloque(os, bd, posNx);
+    is.seekg(is.tellg());
+    bd = *deserializarBloque(is);
+    printf("posType--><%d\n", is.tellg());
+    serializarBloque(os, bd, posNx);
+    is.close();
+    os.close();
+
 
 }
 
@@ -58,15 +94,8 @@ int bdes::modificarNext(string ts, int& pos, int valor) {
 
 int bdes::borrador(string ts, int pos) {
     ts.append(".dbf");
-    ifstream is;
-    is.open(ts.c_str(), ios::in | ios::out | ios::binary);
-    size_t n = 0;
-    is.read((char*) &n, sizeof (size_t));
-    int tam = n;
-    printf("tam----> %d \n", tam);
-    is.close();
+    pos = getPosEstado(ts, pos);
     ofstream os;
-
     os.open(ts.c_str(), ios::in | ios::out | ios::binary);
     os.seekp(pos);
     sb.serialize(os, 0);
@@ -108,6 +137,20 @@ dato bdes::deserializarDato(ifstream& is) {
     d.valor = sb.deserializeString(is);
     return d;
 }
+
+int bdes::getPosEstado(string nom, int pos) {
+    ifstream is;
+    is.open(nom.c_str(), ios::in | ios::out | ios::binary);
+    size_t n = 0;
+    is.seekg(pos);
+    is.read((char*) &n, sizeof (size_t));
+    int tam = n;
+    pos = tam + sizeof (size_t);
+    is.close();
+    return pos;
+}
+
+
 
 
 

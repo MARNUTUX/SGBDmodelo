@@ -18,10 +18,10 @@ public:
     ~bdes();
     int lector(string, int, bloqueDato&);
     int escritor(string,bloqueDato&, int&, int&, int&, int&);
-    int grabador(string, bloqueDato*, int);
+    int grabador(string, bloqueDato, int);
     int validador(string, int);
     int borrador(string, int);
-    int compresor();
+    int compresor(string);
     int modificarNext(string, int&, int);
     
 private:
@@ -29,6 +29,7 @@ private:
     int serializarDato(ofstream&, dato);
     bloqueDato* deserializarBloque(ifstream&);
     dato deserializarDato(ifstream&);
+    int getPosEstado(string, int);
     SerializadorBinario sb;
     
 };
