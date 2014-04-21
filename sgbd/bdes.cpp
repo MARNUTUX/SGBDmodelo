@@ -89,8 +89,6 @@ int bdes::compresor(string ts) {
     os.close();
     //remove(ts.c_str());
     //rename(str.c_str(), ts.c_str());
-
-
 }
 
 int bdes::modificarNext(string ts, int& pos, int valor) {
@@ -110,6 +108,7 @@ int bdes::borrador(string ts, int pos) {
     os.seekp(pos);
     sb.serialize(os, 0);
     os.close();
+    // cambiar el next anterior
 }
 
 int bdes::serializarBloque(ofstream& os, bloqueDato& bd, int& posNx) {
