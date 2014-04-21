@@ -69,25 +69,26 @@ int bdes::compresor(string ts) {
     ts.append(".dbf");
     is.open(ts.c_str(), ios::in | ios::out | ios::binary);
     int pivote = 0;
-    int posNx;
-    pivote = is.tellg();
-    size_t n = 0;
-    is.read((char*)&n, sizeof(size_t));
-    bd = *deserializarBloque(is);
-
-    printf("posType--><%d\n", is.tellg());
-    serializarBloque(os, bd, posNx);
-    is.seekg(is.tellg());
-    bd = *deserializarBloque(is);
-    printf("posType--><%d\n", is.tellg());
-    
-    is.gcount();
-    bd = *deserializarBloque(is);
-
+    int posNx = 0;
+    int gcount = 0;
+    do {
+        size_t n = 0;
+        is.read((char*) &n, sizeof (size_t));
+        gcount = is.gcount();
+        pivote = is.tellg();
+        if (gcount) {
+            is.seekg(pivote-sizeof(size_t));
+            bd = *deserializarBloque(is);
+            printf("--->%s\n", bd.tabla.c_str());
+            if(bd.estado){
+                serializarBloque(os, bd, posNx);
+            }
+        }
+    } while (gcount);
     is.close();
     os.close();
-    //    remove(ts.c_str());
-    //    rename(str.c_str(), ts.c_str());
+    //remove(ts.c_str());
+    //rename(str.c_str(), ts.c_str());
 
 
 }
