@@ -1,4 +1,4 @@
-#include "splitstring.h"
+#include "splitstring.h" //caca
 
 vector<string>& splitstring::split(char delim, int rep)
 {
