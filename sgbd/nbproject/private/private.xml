@@ -9,11 +9,12 @@
         <group>
             <file>file:/home/minor/NetBeansProjects/sgbd/SerializadorBinario.h</file>
             <file>file:/home/minor/NetBeansProjects/sgbd/sgbd.h</file>
-            <file>file:/home/minor/NetBeansProjects/sgbd/bdes.cpp</file>
             <file>file:/home/minor/NetBeansProjects/sgbd/main.cpp</file>
+            <file>file:/home/minor/NetBeansProjects/sgbd/bdes.cpp</file>
             <file>file:/home/minor/NetBeansProjects/sgbd/sgbd.cpp</file>
-            <file>file:/home/minor/NetBeansProjects/sgbd/SerializadorBinario.cpp</file>
+            <file>file:/home/minor/NetBeansProjects/sgbd/Parser.cpp</file>
             <file>file:/home/minor/NetBeansProjects/sgbd/bloqueDato.h</file>
+            <file>file:/home/minor/NetBeansProjects/sgbd/Parser.h</file>
             <file>file:/home/minor/NetBeansProjects/sgbd/diccionarioDatos.cpp</file>
             <file>file:/home/minor/NetBeansProjects/sgbd/bdes.h</file>
             <file>file:/home/minor/NetBeansProjects/sgbd/diccionarioDatos.h</file>

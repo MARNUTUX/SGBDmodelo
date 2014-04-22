@@ -40,7 +40,8 @@ OBJECTFILES= \
 	${OBJECTDIR}/bdes.o \
 	${OBJECTDIR}/diccionarioDatos.o \
 	${OBJECTDIR}/main.o \
-	${OBJECTDIR}/sgbd.o
+	${OBJECTDIR}/sgbd.o \
+	${OBJECTDIR}/splitstring.o
 
 
 # C Compiler Flags
@@ -96,6 +97,11 @@ ${OBJECTDIR}/sgbd.o: sgbd.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/sgbd.o sgbd.cpp
+
+${OBJECTDIR}/splitstring.o: splitstring.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/splitstring.o splitstring.cpp
 
 # Subprojects
 .build-subprojects:

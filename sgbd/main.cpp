@@ -46,6 +46,8 @@ int pruebaBdes() {
 }
 
 int main() {
-    pruebaBdes();
+    //pruebaBdes();
+    
+    string str = "select * from Persona";
 
 }
