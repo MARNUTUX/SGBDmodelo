@@ -35,6 +35,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
+	${OBJECTDIR}/Parser.o \
 	${OBJECTDIR}/SerializadorBinario.o \
 	${OBJECTDIR}/bdes.o \
 	${OBJECTDIR}/diccionarioDatos.o \
@@ -65,6 +66,11 @@ LDLIBSOPTIONS=
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/sgbd: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/sgbd ${OBJECTFILES} ${LDLIBSOPTIONS}
+
+${OBJECTDIR}/Parser.o: Parser.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Parser.o Parser.cpp
 
 ${OBJECTDIR}/SerializadorBinario.o: SerializadorBinario.cpp 
 	${MKDIR} -p ${OBJECTDIR}

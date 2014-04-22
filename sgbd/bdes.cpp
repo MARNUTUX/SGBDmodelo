@@ -38,7 +38,7 @@ int bdes::lector(string ts, int pos, bloqueDato& bd) {
     is.close();
 }
 
-int bdes::grabador(string ts, bloqueDato bd, int pos) {
+int bdes::grabador(string ts, bloqueDato bd, int pos) { //bug con tamaño diferente
     ofstream os;
     ts.append(".dbf");
     os.open(ts.c_str(), ios::in | ios::out | ios::binary);
@@ -76,10 +76,11 @@ int bdes::compresor(string ts) {
         is.read((char*) &n, sizeof (size_t));
         gcount = is.gcount();
         pivote = is.tellg();
+        printf("pivote-->%d\n", pivote);
         if (gcount) {
             is.seekg(pivote-sizeof(size_t));
             bd = *deserializarBloque(is);
-            printf("--->%s\n", bd.tabla.c_str());
+            printf("ser--->%s\n", bd.datos.front().nombreColumna.c_str());
             if(bd.estado){
                 serializarBloque(os, bd, posNx);
             }
