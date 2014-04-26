@@ -9,18 +9,42 @@
 #define	SGBD_H
 
 #include "diccionarioDatos.h"
-
+#include "Parser.h"
+#include "splitstring.h"
+#include "bdes.h" 
+#include <vector> 
+#include <iostream> 
+#include <stdlib.h> 
 
 class sgbd {
 public:
-    int creador(tabla, string);
-    //int insertor(tabla, list<dato>, int, int);
-    int actualizador();
-    int borrador();
-    int seleccionador();
-    
+    sgbd();
+    bool reconocedor(string);
+
+
 private:
     diccionarioDatos dd;
+    Parser parser;
+    bdes bdess;
+    int creador(tabla, string);
+    int creador(string);
+    int actualizador(string);
+    int borrador(string);
+    int seleccionador(string);
+    //utiles
+    vector<string> separador(string, char);
+    int creaTabla(string, list<columna>);
+    columna creaCol(string, string);
+    int creaEscritor();
+    bloqueDato creaBloque(string, list<string>);
+
+    //validadores
+    int validaInsertor(string);
+    bool validaNumeros(string);
+
+    //operaciones basicas
+    int insertor(vector<string>);
+
 };
 
 

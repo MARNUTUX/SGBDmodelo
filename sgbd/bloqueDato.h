@@ -10,15 +10,11 @@
 #include <cstring>
 #include "estructurasDiccionario.h"
 using namespace std;
-struct dato {
-    string nombreColumna;
-    string tipoDato;
-    string valor;
-};
+
 
 struct bloqueDato {
     string tabla; // se guarda solo el nombre
-    list<dato> datos; 
+    list<string> datos; 
     int estado; 
     int next; // -1 si esta pendiente
     int posInicial;

@@ -2,14 +2,14 @@
 
 Parser::Parser()
 {  
-    this->tipoDato = "(int|varchar\\([[:digit:]]+\\)|float|double|text|date)";   
+    this->tipoDato = "(int|varchar\\[[[:digit:]]+\\]|float|double|text|date)";   
     this->name = "[[:alpha:]][[:alnum:]]*"; 
     this->declaracion = name+" "+tipoDato;   
     this->patInsert = "insert into "+name+" values\\( [[:alnum:]]+(,[[:alnum:]]+)* \\);"; 
-    this->patDelete = "delete from "+name+"( where "+name+" = [[:alnum:]]+( and "+name+" = [[:alnum:]]+)*)*;";
-    this->patCreate = "create table "+name+"\\( "+declaracion+"( , "+declaracion+")* \\);";
-    this->patSelect = "select (\\*|"+name+"(, "+name+")*) from "+name+";"; 
-    this->patUpdate = "update "+name+" set "+name+" = [[:alnum:]]+( ,"+name+" = [[:alnum:]]+)*( where "+name+" = [[:alnum:]]+( and "+name+" = [[:alnum:]]+)*)*;";
+    this->patDelete = "delete from "+name+"( where "+name+"=[[:alnum:]]+( (and|or) "+name+"=[[:alnum:]]+)*)*;";
+    this->patCreate = "create table "+name+" \\( "+declaracion+"(,"+declaracion+")* \\);";
+    this->patSelect = "select (\\*|"+name+"(,"+name+")*) from "+name+"( where "+name+"=[[:alnum:]]+( (and|or) "+name+"=[[:alnum:]]+)*)*;"; 
+    this->patUpdate = "update "+name+" set "+name+"=[[:alnum:]]+(,"+name+"=[[:alnum:]]+)*( where "+name+"=[[:alnum:]]+( (and|or) "+name+"=[[:alnum:]]+)*)*;";
 }
 
 bool Parser::insertando(std::string input)
@@ -62,9 +62,9 @@ bool Parser::creando(std::string input)
 
 Parser::~Parser()
 {
-    regfree(&ins);
+    /*regfree(&ins);
     regfree(&del);
     regfree(&upd);
     regfree(&sel);
-    regfree(&cre);
+    regfree(&cre);*/
 }

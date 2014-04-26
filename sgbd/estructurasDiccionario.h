@@ -14,7 +14,7 @@ using namespace std;
 
 struct columna {
     string nombre;
-    string tipo;     
+    string tipo;    
 };
 
 struct tabla {
@@ -28,6 +28,11 @@ struct tablespace {
     string nombre;
     string ruta;
     list<tabla> tablas;
+}; 
+
+struct pivote {
+    string tabla;
+    int pivote;
 };
 
 

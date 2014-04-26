@@ -12,37 +12,49 @@
 #include "SerializadorBinario.h"
 #define DEFAULT "default"
 
-
 class diccionarioDatos {
 public:
     diccionarioDatos();
+    ~diccionarioDatos();
     int prueba();
-    
+
     //metodos cargar diccionario de datos del archivo
     int abrir();
+
+    //metodos guardar diccionario de datos en archivo
+    int guardar();
+
+    //metodos diccionario de datos
+    int agregarTabla(tabla, string);
+    int quitarTabla(tabla);
+    bool existeColumna(string);
+    int existeTabla(string, tabla&);//agreog de lo de minor
+    list<pivote> pivotes;
+    string toString();
+
+    int miPivote; // falta serializarlo
+private:
+    list<tablespace> tablespaces;
+
+    SerializadorBinario sb;
+    
+    //persistencia
     tablespace abrirTablespace(ifstream&);
     tabla abrirTabla(ifstream&);
     columna abrirColumna(ifstream&);
-    //metodos guardar diccionario de datos en archivo
-    int guardar();
+    list<pivote> abrirPrivotes(ifstream&);
+    pivote abrirPivote(ifstream&);
     int guardarTablespace(ofstream&, tablespace);
-    int guardarTabla(ofstream&,  tabla);
+    int guardarTabla(ofstream&, tabla);
     int guardarColumna(ofstream&, columna);
-    //metodos diccionario de datos
-    int agregarTabla(tabla, string);
-    int createTablespace(tabla, string);
-    int quitarTabla(tabla);
+    int guardarPivotes(ofstream&);
+    int guardarPivote(ofstream&, pivote);
     
-    
-    
-    
-    string toString();
- 
-    
-    
-private:
-    list<tablespace> tablespaces;
-    SerializadorBinario sb;
+    //utiles
+    tablespace* existeTablespace(string);
+    int crearTabla(tabla, string);
+    tablespace createTablespace(string);
+
     
 };
 

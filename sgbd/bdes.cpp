@@ -80,7 +80,7 @@ int bdes::compresor(string ts) {
         if (gcount) {
             is.seekg(pivote-sizeof(size_t));
             bd = *deserializarBloque(is);
-            printf("ser--->%s\n", bd.datos.front().nombreColumna.c_str());
+ //           printf("ser--->%s\n", bd.datos.front());
             if(bd.estado){
                 serializarBloque(os, bd, posNx);
             }
@@ -119,15 +119,11 @@ int bdes::serializarBloque(ofstream& os, bloqueDato& bd, int& posNx) {
     int tam = bd.datos.size();
     posNx = os.tellp();
     sb.serialize(os, tam);
-    for (std::list<dato>::iterator it = bd.datos.begin(); it != bd.datos.end(); ++it)
-        serializarDato(os, *it);
+    for (std::list<string>::iterator it = bd.datos.begin(); it != bd.datos.end(); ++it)
+        serialize(os, *it);
 }
 
-int bdes::serializarDato(ofstream& os, dato d) {
-    sb.serialize(os, d.nombreColumna);
-    sb.serialize(os, d.tipoDato);
-    sb.serialize(os, d.valor);
-}
+
 
 bloqueDato* bdes::deserializarBloque(ifstream& is) {
     bloqueDato* bd = new bloqueDato;
@@ -136,17 +132,10 @@ bloqueDato* bdes::deserializarBloque(ifstream& is) {
     bd->next = sb.deserializeInt(is);
     int tam = deserializeInt(is);
     for (int i = 0; i < tam; i++)
-        bd->datos.push_front(deserializarDato(is));
+        bd->datos.push_front(deserializeString(is));
     return bd;
 }
 
-dato bdes::deserializarDato(ifstream& is) {
-    dato d;
-    d.nombreColumna = sb.deserializeString(is);
-    d.tipoDato = sb.deserializeString(is);
-    d.valor = sb.deserializeString(is);
-    return d;
-}
 
 int bdes::getPosEstado(string nom, int pos) {
     ifstream is;

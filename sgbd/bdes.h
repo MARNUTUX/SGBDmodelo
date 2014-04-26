@@ -26,9 +26,7 @@ public:
     
 private:
     int serializarBloque(ofstream&, bloqueDato&, int&);
-    int serializarDato(ofstream&, dato);
     bloqueDato* deserializarBloque(ifstream&);
-    dato deserializarDato(ifstream&);
     int getPosEstado(string, int);
     SerializadorBinario sb;
     
