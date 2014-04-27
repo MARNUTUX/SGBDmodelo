@@ -44,7 +44,7 @@ int sgbd::actualizador(string cadena) {
         return 0;
 }
 
-int sgbd::borrador(string cadena) {
+int sgbd::validaBorrador(string cadena) {
     if (parser.borrando(cadena)) {
         cout << cadena << endl;
         splitstring s(cadena);
@@ -88,14 +88,8 @@ bool sgbd::reconocedor(string cadena) {
             }
         } else return false;
     } else if (ss[0] == "delete") {
-        if (borrador(cadena)) {
-            //ss[2] posee el nombre de la tabla en la que se quiere eliminar.
-            if (ss.size() > 3) {
-                for (int i = 4; i < ss.size(); i += 2)
-                    ss1.push_back(ss[i]);
-                //ss1 tiene los valores del where (sin ands y ors)
-            }
-            return true;
+        if (validaBorrador(cadena)) {
+            
         } else return false;
     } else if (ss[0] == "update") {
         //ss[1] tiene el nombre de la tabla a actualizar
@@ -226,29 +220,32 @@ int sgbd::insertor(vector<string> ss) {
     return 1;
 }
 
-int sgbd::seleccionador(vector<string> ss) {
+int  sgbd::seleccionador(vector<string> ss) {
     vector<string> ss0;
     vector<string> ss1;
+    vector<string> whereValues;
     string nombre = ss[3];
     ss0 = separador(ss[1], ',');
     // cout << "nombre --> " << nombre << endl;
     tabla t;
+    list<bloqueDato> bloquesSelec; //lista devuelve lista bloques
     if (dd.existeTabla(nombre, t)) {
         if (ss[1].compare("*") == 0) {
             bloqueDato bd;
             int next = t.bloqueInicial;
             do {
-                cout<<"bd.next"<<bd.next<<endl;                
+                cout << "bd.next" << bd.next << endl;
                 bdess.lector(DEFAULT, next, bd);
-                cout<<"bd.nombre"<<bd.tabla<<endl;
-                cout<<"bd.c0"<<bd.datos.front()<<endl;
+                cout << "bd.nombre" << bd.tabla << endl;
+                cout << "bd.c0" << bd.datos.front() << endl;
+                bloquesSelec.push_front(bd);
+                
                 next = bd.next;
             } while (bd.next != -1);
-
+            lstBloques = bloquesSelec;
         } else {
             cout << "no *" << ss[1] << endl;
         }
-        return 1;
     } else {
         return 0;
     }
@@ -256,20 +253,33 @@ int sgbd::seleccionador(vector<string> ss) {
     //ss0 tiene los valores que se desean seleccionar, puede que solo sea "*" - todos los valores de la tabla-
     //for (int i = 0; i < ss0.size(); i++)
     //    cout << ss0[i] + "\n";
+    /*vector<string> vstr;
     if (ss.size() > 4) {
         //en dado caso que tuviera where la sentencia
-        for (int i = 4; i < ss.size(); i += 2)
+        for (int i = 5; i < ss.size(); i += 2) {
             ss1.push_back(ss[i]);
+            cout << "ss[i] --> " << ss[i] << endl;
+            vstr = separador(ss[i], '=');
+            for (int j = 0; vstr.size(); j++) {
+                whereValues.push_back(vstr[j]);
+                cout << "wv[i] --> " << vstr[j] << endl;
+            }
+        }
         cout << "size --->" << ss1.size() << endl;
         //ss1 tiene los valores del where (sin ands y ors)
-    }
-    return true;
+    }*/
+    return 1;
 
 }
+
+int sgbd::borrador(vector<string> ss) {
+    seleccionador(ss);
+    for(std::list<bloqueDato>::iterator it = lstBloques.begin(); it != lstBloques.end(); ++it) {
+        bdess.borrador((*it).tabla, (*it).posInicial);
+    }
+}
+
 
 
 // utiles
 
-bloqueDato sgbd::creaBloque(string nombre, list<string> lst) {
-
-}

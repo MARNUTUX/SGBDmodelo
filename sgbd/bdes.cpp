@@ -88,8 +88,8 @@ int bdes::compresor(string ts) {
     } while (gcount);
     is.close();
     os.close();
-    //remove(ts.c_str());
-    //rename(str.c_str(), ts.c_str());
+    remove(ts.c_str());
+    rename(str.c_str(), ts.c_str());
 }
 
 int bdes::modificarNext(string ts, int& pos, int valor) {

@@ -20,7 +20,7 @@ class sgbd {
 public:
     sgbd();
     bool reconocedor(string);
-
+    list<bloqueDato> lstBloques;
 
 private:
     diccionarioDatos dd;
@@ -29,7 +29,7 @@ private:
     int creador(tabla, string);
     int creador(string);
     int actualizador(string);
-    int borrador(string);
+
 
     //utiles
     vector<string> separador(string, char);
@@ -42,10 +42,12 @@ private:
     int validaInsertor(string);
     bool validaNumeros(string);
     int validaSeleccionador(string);
-    
+    int validaBorrador(string);
+
     //operaciones basicas
     int insertor(vector<string>);
     int seleccionador(vector<string>);
+    int borrador(vector<string>);
 };
 
 
