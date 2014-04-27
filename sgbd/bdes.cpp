@@ -69,30 +69,42 @@ int bdes::compresor(string ts, diccionarioDatos& dd) {
     os.open(str.c_str(), ios::in | ios::out | ios::trunc | ios::binary);
     ts.append(".dbf");
     is.open(ts.c_str(), ios::in | ios::out | ios::binary);
-    int pivote = 0;
+    int pivoteV = 0;
     int posNx = 0;
     int gcount = 0;
+    list<pivote> lstPiv;
     do {
         size_t n = 0;
         is.read((char*) &n, sizeof (size_t));
         gcount = is.gcount();
-        pivote = is.tellg();
-        printf("pivote-->%d\n", pivote);
+        pivoteV = is.tellg();
+        printf("pivote-->%d\n", pivoteV);
         if (gcount) {
-            is.seekg(pivote-sizeof(size_t));
+            is.seekg(pivoteV-sizeof(size_t));
             bd = *deserializarBloque(is);
- //           printf("ser--->%s\n", bd.datos.front());
             if(bd.estado){
                 serializarBloque(os, bd, posNx);
-                pivote p0;
+                for(std::list<pivote>::iterator it = lstPiv.begin(); it != lstPiv.end(); ++it) {                    
+                    if((*it).tabla.compare(bd.tabla)) {
+                        int posAnterior = (*it).pivote;
+                        (*it).pivote = bd.next;
+                        modificarNext(DEFAULT, posAnterior, bd.posInicial);
+                    } else {
+                        (*it).pivote = bd.next;
+                        (*it).tabla = bd.tabla;
+                        lstPiv.push_front((*it));
+                        
+                    }
+                }
                 // lista de pivotes accion igual a insertar
             }
         }
-    } while (gcount);
+    } while (gcount);   
     is.close();
     os.close();
     remove(ts.c_str());
     rename(str.c_str(), ts.c_str());
+    dd.pivotes = lstPiv;
 }
 
 int bdes::modificarNext(string ts, int& pos, int valor) {
@@ -107,11 +119,13 @@ int bdes::modificarNext(string ts, int& pos, int valor) {
 
 int bdes::borrador(string ts, int pos) {
     ts.append(".dbf");
-    pos = getPosEstado(ts, pos);
+    cout<<"POOSS --->     "<<pos<<endl;
+    pos += getPosEstado(ts, pos);
     ofstream os;
     os.open(ts.c_str(), ios::in | ios::out | ios::binary);
+    cout<<"POOSS --->     "<<pos<<endl;
     os.seekp(pos);
-    sb.serialize(os, 0);
+    sb.serialize(os, 0); 
     os.close();
     // cambiar el next anterior
 }
@@ -153,6 +167,7 @@ int bdes::getPosEstado(string nom, int pos) {
     int tam = n;
     pos = tam + sizeof (size_t);
     is.close();
+    cout<<"getPosEstado"<<pos<<endl;
     return pos;
 }
 

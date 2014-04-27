@@ -49,8 +49,8 @@ int sgbd::validaBorrador(string cadena) {
         cout << cadena << endl;
         splitstring s(cadena);
         vector<string> ss = s.split(' ');
-        for (int k = 0; k < ss.size(); k++)
-            cout << k << " => " << ss[k] << endl;
+        //for (int k = 0; k < ss.size(); k++)
+        //    cout << k << " => " << ss[k] << endl;
         return 1;
     } else
         return 0;
@@ -89,7 +89,7 @@ bool sgbd::reconocedor(string cadena) {
         } else return false;
     } else if (ss[0] == "delete") {
         if (validaBorrador(cadena)) {
-
+            borrador(ss);
         } else return false;
     } else if (ss[0] == "update") {
         //ss[1] tiene el nombre de la tabla a actualizar
@@ -194,9 +194,9 @@ int sgbd::insertor(vector<string> ss) {
             if (p0 != 0) {
                 cout << "posPivote................>> " << p0->pivote << endl;
                 int posAnterior = p0->pivote;
-                p0->pivote = posInicial;
+                p0->pivote = next; //next??
                 cout << "posPivote................>> " << p0->pivote << endl;
-                bdess.modificarNext(DEFAULT, posAnterior, p0->pivote);
+                bdess.modificarNext(DEFAULT, posAnterior, posInicial);
             } else {
                 p0 = new pivote;
                 p0->pivote = next;
@@ -232,7 +232,7 @@ int sgbd::seleccionador(vector<string> ss) {
                 bdess.lector(DEFAULT, next, bd);
                 cout << "bd.nombre" << bd.tabla << endl;
                 for (std::list<string>::iterator it = bd.datos.begin(); it != bd.datos.end(); ++it) {
-                    cout<<(*it)<<endl;
+                    cout << (*it) << endl;
                 }
                 cout << "bd.c0" << bd.datos.front() << endl;
                 bloquesSelec.push_front(bd);
@@ -270,9 +270,33 @@ int sgbd::seleccionador(vector<string> ss) {
 }
 
 int sgbd::borrador(vector<string> ss) {
-    seleccionador(ss);
-    for (std::list<bloqueDato>::iterator it = lstBloques.begin(); it != lstBloques.end(); ++it) {
-        bdess.borrador((*it).tabla, (*it).posInicial);
+    //lstBloques;
+    tabla t0;
+    bloqueDato bd;
+    if (dd.existeTabla(ss[2], t0)) {
+        int next = t0.bloqueInicial;
+        do {
+            cout<<"NEXT  -.-.-.-> "<<next<<endl;
+            bdess.borrador(DEFAULT, next);
+            bdess.lector(DEFAULT, next, bd);            
+            next = bd.next;
+            cout<<"next---->      "<<next<<endl;
+            cout<<"posInicial---->"<<bd.posInicial<<endl;
+            cout<<"estado-------->"<<bd.estado<<endl;
+            //bdess.borrador(DEFAULT, bd.posInicial);
+            //{<imprime solo>
+            cout << "bd.next" << bd.next << endl;
+            cout << "bd.nombre" << bd.tabla << endl;
+            for (std::list<string>::iterator it = bd.datos.begin(); it != bd.datos.end(); ++it) {
+                cout << (*it) << endl;
+            }
+            cout << "bd.c0" << bd.datos.front() << endl;
+            //}</imprime solo>
+            
+        } while (bd.next != -1);
+        for (std::list<bloqueDato>::iterator it = lstBloques.begin(); it != lstBloques.end(); ++it) {
+            bdess.borrador((*it).tabla, (*it).posInicial);
+        }
     }
 }
 
