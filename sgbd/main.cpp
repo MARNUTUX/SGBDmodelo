@@ -50,11 +50,12 @@ using namespace std;
 int main() {
     sgbd sg = sgbd();
     sg.reconocedor("create table t3 ( x int,y varchar[5],z int );");
+    sg.reconocedor("insert into t3 values( 0,dfggf,33 );");
     sg.reconocedor("insert into t3 values( 0,dfggf,33 );");  
     //sg.reconocedor("delete from t1 where a=x or y=1;");
-    //sg.reconocedor("select * from t3 where a=1 and x=qwerty or h5=h1;"); 
+    sg.reconocedor("select * from t3 where a=1 and x=qwerty or h5=h1;"); 
 
     //sg.reconocedor("update t1 set a=b,c=1 where a=z and h=1;"); 
-    
+
     return 1;
 }

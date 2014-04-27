@@ -25,8 +25,8 @@ int sgbd::validaSeleccionador(string cadena) {
         cout << cadena << endl;
         splitstring s(cadena);
         vector<string> ss = s.split(' ');
-        for (int k = 0; k < ss.size(); k++)
-            cout << k << " => " << ss[k] << endl;
+        //for (int k = 0; k < ss.size(); k++)
+        //    cout << k << " => " << ss[k] << endl;
         return 1;
     } else
         return 0;
@@ -199,14 +199,23 @@ int sgbd::insertor(vector<string> ss) {
             int posEscribe = dd.miPivote;
             bdess.escritor(DEFAULT, bd, next, posInicial, posFinal, posEscribe);
             dd.miPivote = posFinal;
-            pivote p0;
+            pivote *p0;
             dd.actualizaBloquesTabla(t.nombre, posInicial, posInicial);
-            p0.pivote = posInicial;
-            p0.tabla = nombre;
-            dd.pivotes.push_front(p0);
-            tabla prueba;
-            dd.existeTabla(nombre, prueba);
-            cout<<"prueba.bloqueInicial__--> "<< prueba.bloqueInicial <<endl;
+            p0 = dd.getPivote(nombre);
+            
+            if (p0 != 0) {
+                cout<<"posPivote................>> "<<p0->pivote<<endl;                
+                int posAnterior = p0->pivote;
+                p0->pivote = posInicial;
+                cout<<"posPivote................>> "<<p0->pivote<<endl;
+                bdess.modificarNext(DEFAULT, posAnterior, p0->pivote);
+            } else {
+                p0 = new pivote;
+                p0->pivote = next;
+                cout<<"posPivote................>> "<<p0->pivote<<endl;
+                p0->tabla = nombre;
+                dd.pivotes.push_front(*p0);
+            }
 
         } else {
             return 0;
@@ -227,8 +236,10 @@ int sgbd::seleccionador(vector<string> ss) {
     if (dd.existeTabla(nombre, t)) {
         if (ss[1].compare("*") == 0) {
             cout << "t.bloqueInicial " << t.bloqueInicial << endl;
-            
-
+            bloqueDato bd;
+            bdess.lector(DEFAULT, t.bloqueInicial, bd);
+            cout<<"nombreTabla  -> " <<bd.tabla<<endl;
+            cout<<"pivoteNx     -> "  <<bd.next<<endl;
 
 
         } else {

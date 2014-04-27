@@ -222,3 +222,13 @@ int diccionarioDatos::actualizaBloquesTabla(string s, int inicio, int final) {
     }
     return existe;
 }
+
+pivote* diccionarioDatos::getPivote(string nomTabla) {
+    pivote* p0 = 0;
+    for(std::list<pivote>::iterator it = pivotes.begin(); it != pivotes.end(); ++it) {
+        if((*it).tabla.compare(nomTabla) == 0) {
+            p0 = &(*it);
+        }
+    }
+    return p0;
+}

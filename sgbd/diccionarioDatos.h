@@ -32,6 +32,7 @@ public:
     list<pivote> pivotes;
     string toString();
     int actualizaBloquesTabla(string, int, int);
+    pivote* getPivote(string);
     
     int miPivote; // falta serializarlo
 private:

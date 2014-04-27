@@ -1,5 +1,5 @@
 #include <stdlib.h>
-
+#include <iostream>
 #include "bdes.h"
 
 bdes::bdes() {
@@ -97,7 +97,8 @@ int bdes::modificarNext(string ts, int& pos, int valor) {
     ts.append(".dbf");
     os.open(ts.c_str(), ios::in | ios::out | ios::binary);
     os.seekp(pos);
-    sb.serialize(os, valor);
+    std::cout<<"modificarNext ---> "<<valor<<std::endl;
+    os.write(reinterpret_cast<char*>(&valor), sizeof(int));
     os.close();
 }
 
@@ -115,9 +116,9 @@ int bdes::borrador(string ts, int pos) {
 int bdes::serializarBloque(ofstream& os, bloqueDato& bd, int& posNx) {
     sb.serialize(os, bd.tabla);
     sb.serialize(os, bd.estado);
-    sb.serialize(os, bd.next); //get pos
-    int tam = bd.datos.size();
     posNx = os.tellp();
+    os.write(reinterpret_cast<char*>(&bd.next), sizeof(int));
+    int tam = bd.datos.size();
     sb.serialize(os, tam);
     for (std::list<string>::iterator it = bd.datos.begin(); it != bd.datos.end(); ++it)
         serialize(os, *it);
@@ -129,7 +130,10 @@ bloqueDato* bdes::deserializarBloque(ifstream& is) {
     bloqueDato* bd = new bloqueDato;
     bd->tabla = sb.deserializeString(is);
     bd->estado = sb.deserializeInt(is);
-    bd->next = sb.deserializeInt(is);
+    int nx = -2;
+    is.read(reinterpret_cast<char*>(&nx), sizeof(int));
+    bd->next = nx;
+    //bd->next = sb.deserializeInt(is);
     int tam = deserializeInt(is);
     for (int i = 0; i < tam; i++)
         bd->datos.push_front(deserializeString(is));
