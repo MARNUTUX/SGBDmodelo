@@ -30,7 +30,7 @@ private:
     int creador(string);
     int actualizador(string);
     int borrador(string);
-    int seleccionador(string);
+
     //utiles
     vector<string> separador(string, char);
     int creaTabla(string, list<columna>);
@@ -41,10 +41,11 @@ private:
     //validadores
     int validaInsertor(string);
     bool validaNumeros(string);
-
+    int validaSeleccionador(string);
+    
     //operaciones basicas
     int insertor(vector<string>);
-
+    int seleccionador(vector<string>);
 };
 
 

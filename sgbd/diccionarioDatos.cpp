@@ -4,22 +4,21 @@
 
 diccionarioDatos::diccionarioDatos() {
     abrir();
-    tablespace ts;
-    ts.nombre = DEFAULT;
-    ts.ruta.append(".dbf");
-    tablespaces.push_front(ts);
+
 }
 
 diccionarioDatos::~diccionarioDatos() {
+    guardar();
+    cout << "ya guarde :)))))))" << endl;
 }
 
-tablespace diccionarioDatos::createTablespace(string nombre) {
+/*tablespace diccionarioDatos::createTablespace(string nombre) {
     tablespace tsdf;
     tsdf.nombre = nombre;
     tsdf.ruta = nombre.append(".dbf");
     tablespaces.push_front(tsdf);
     return tsdf;
-}
+}*/
 
 int diccionarioDatos::abrir() {
     cout << "Abriendo el archivos" << endl;
@@ -27,6 +26,7 @@ int diccionarioDatos::abrir() {
     is.open("system.dbf");
     if (is.good()) {
         int tam = sb.deserializeInt(is);
+        cout << tam << "<-Tam" << endl;
         for (int i = 0; i < tam; i++) {
             tablespaces.push_front(abrirTablespace(is));
         }
@@ -34,6 +34,10 @@ int diccionarioDatos::abrir() {
         miPivote = sb.deserializeInt(is);
 
     } else {
+        tablespace ts;
+        ts.nombre = DEFAULT;
+        ts.ruta.append(".dbf");
+        tablespaces.push_front(ts);
         miPivote = 0;
     }
     is.close();
@@ -70,8 +74,8 @@ tabla diccionarioDatos::abrirTabla(ifstream &is) {
     tabla t;
     t.nombre = sb.deserializeString(is);
     //cout << "Tablas levantadas-------------------------------- ->" << t.nombre << endl;
-    t.bloqueInicial = sb.deserializeString(is);
-    t.bloqueFinal = sb.deserializeString(is);
+    t.bloqueInicial = sb.deserializeInt(is);
+    t.bloqueFinal = sb.deserializeInt(is);
     int tam = sb.deserializeInt(is);
     for (int i = 0; i < tam; i++) {
         t.columnas.push_front(abrirColumna(is));
@@ -148,52 +152,17 @@ int diccionarioDatos::guardarPivote(ofstream& os, pivote p) {
     sb.serialize(os, p.pivote);
 }
 
-int diccionarioDatos::prueba() {
-    tablespace ts;
-    ts.nombre = "ts1";
-    ts.ruta = "/file/...";
-    tabla t;
-    t.nombre = "nom";
-    t.bloqueInicial = "213";
-    t.bloqueFinal = "355";
-    columna c;
-    c.nombre = "nomCol";
-    c.tipo = "varchar";
-    t.columnas.push_front(c);
-    ts.tablas.push_front(t);
-    tablespaces.push_front(ts);
-    //cout << "prueba" << endl;
-}
-
 int diccionarioDatos::agregarTabla(tabla t, string nombre = DEFAULT) {
-    tabla t0;
-    if (existeTabla(t.nombre, t0) == 0) {
-        tablespaces.front().tablas.push_front(t0);
-        guardar();
+    if (existeTabla(t.nombre, t) == 0) {
+        tablespaces.front().tablas.push_front(t);
+        //cout<<"------------->"<<t.nombre<<endl;
+        //guardar();
+        return 1;
+    } else {
+        return 0;
     }
 
 }
-
-int crearTabla(tabla t, string nombre = DEFAULT) {
-
-}
-
-/*
-int diccionarioDatos::existeTabla(string nombre) {
-    int existe = 0;
-    tablespace ts;
-    tabla t0;
-    for (std::list<tablespace>::iterator it = tablespaces.begin(); it != tablespaces.end(); ++it) {
-        ts = *it;
-        for (std::list<tabla>::iterator it = ts.tablas.begin(); it != ts.tablas.end(); ++it) {
-            t0 = *it;
-            if (t0.nombre.compare(nombre)) {
-                existe = 1;
-            }
-        }
-    }
-    return existe;
-}*/
 
 tablespace* diccionarioDatos::existeTablespace(string tsP) { //***¡!***
     tablespace* ts = 0;
@@ -219,19 +188,37 @@ int diccionarioDatos::existeTabla(string s, tabla& tP) {
     int existe = 0;
     tablespace ts;
     tabla t0;
-    for (std::list<tablespace>::iterator it = tablespaces.begin(); it != tablespaces.end(); ++it) {
-        ts = *it;
+    for (std::list<tablespace>::iterator it0 = tablespaces.begin(); it0 != tablespaces.end(); ++it0) {
+        ts = *it0;
         for (std::list<tabla>::iterator it = ts.tablas.begin(); it != ts.tablas.end(); ++it) {
             t0 = *it;
-            cout<<"Tp.nombre--->"<<s<<endl;
+            //cout<<"Tp.nombre--->"<<s<<endl;
             if (t0.nombre.compare(s) == 0) {
                 existe = 1;
                 tP = t0;
-                cout << "encontro ihgjhg" << endl;
+                //cout << "encontro ihgjhg" << endl;
             }
         }
     }
     return existe;
 }
 
-
+int diccionarioDatos::actualizaBloquesTabla(string s, int inicio, int final) {
+    int existe = 0;
+    tablespace ts;
+    tabla t0;
+    for (std::list<tablespace>::iterator it0 = tablespaces.begin(); it0 != tablespaces.end(); ++it0) {
+        for (std::list<tabla>::iterator it = (*it0).tablas.begin(); it != (*it0).tablas.end(); ++it) {
+            t0 = *it;
+            if (t0.nombre.compare(s) == 0) {
+                //cout << "HALLADO111!!!!!!!!!!!!!!!!!!!" << endl;
+                if ((*it).bloqueInicial == -1) {
+                    (*it).bloqueInicial = inicio;
+                }
+                (*it).bloqueFinal = final;
+                existe = 1;
+            }
+        }
+    }
+    return existe;
+}

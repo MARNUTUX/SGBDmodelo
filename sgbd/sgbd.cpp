@@ -20,7 +20,7 @@ int sgbd::validaInsertor(string cadena) {
         return 0;
 }
 
-int sgbd::seleccionador(string cadena) {
+int sgbd::validaSeleccionador(string cadena) {
     if (parser.selecteando(cadena)) {
         cout << cadena << endl;
         splitstring s(cadena);
@@ -80,20 +80,12 @@ bool sgbd::reconocedor(string cadena) {
                 cout << "error al insertar" << endl;
         } else return false;
     } else if (ss[0] == "select") {
-        if (this->seleccionador(cadena)) {
-            //ss[3] tiene el nombre de la tabla donde se está haciendo el select.
-            ss0 = separador(ss[1], ',');
-            //ss[0] tiene los valores que se desean seleccionar, puede que solo sea "*"-todos los valores de la tabla-
-            for (int i = 0; i < ss0.size(); i++)
-                cout << ss0[i] + "\n";
-            if (ss.size() > 4) {
-                //en dado caso que tuviera where la sentencia
-                for (int i = 4; i < ss.size(); i += 2)
-                    ss1.push_back(ss[i]);
-                cout << ss1.size();
-                //ss1 tiene los valores del where (sin ands y ors)
+        if (this->validaSeleccionador(cadena)) {
+            if (seleccionador(ss)) {
+                cout << "seleccionado" << endl;
+            } else {
+                cerr << "error" << endl;
             }
-            return true;
         } else return false;
     } else if (ss[0] == "delete") {
         if (borrador(cadena)) {
@@ -123,8 +115,8 @@ bool sgbd::reconocedor(string cadena) {
             ss1 = separador(cadena, '(');
             vector<string> ss2 = separador(ss1[1], ')');
             vector<string> ss3 = separador(ss2[0], ',');
-            for (int i = 0; i < ss3.size(); i++)
-                cout << ss3[i] + "\n";
+            //for (int i = 0; i < ss3.size(); i++)
+            //cout << ss3[i] + "\n";
             list<columna> colist;
             vector<string> values;
             for (int i = 0; i < ss3.size(); i++) {
@@ -148,9 +140,13 @@ vector<string> sgbd::separador(string cadena, char val) {
 int sgbd::creaTabla(string nombre, list<columna> colist) {
     tabla tab;
     tab.nombre = nombre;
+    tab.bloqueFinal = -1;
+    tab.bloqueInicial = -1;
     tab.columnas = colist;
-    dd.agregarTabla(tab, DEFAULT);
-    return 1;
+    if (dd.agregarTabla(tab, DEFAULT))
+        return 1;
+    else
+        return 0;
 }
 
 columna sgbd::creaCol(string nombre, string tipo) {
@@ -204,10 +200,14 @@ int sgbd::insertor(vector<string> ss) {
             bdess.escritor(DEFAULT, bd, next, posInicial, posFinal, posEscribe);
             dd.miPivote = posFinal;
             pivote p0;
+            dd.actualizaBloquesTabla(t.nombre, posInicial, posInicial);
             p0.pivote = posInicial;
             p0.tabla = nombre;
             dd.pivotes.push_front(p0);
-            
+            tabla prueba;
+            dd.existeTabla(nombre, prueba);
+            cout<<"prueba.bloqueInicial__--> "<< prueba.bloqueInicial <<endl;
+
         } else {
             return 0;
         }
@@ -215,6 +215,42 @@ int sgbd::insertor(vector<string> ss) {
         return 0;
     }
     return 1;
+}
+
+int sgbd::seleccionador(vector<string> ss) {
+    vector<string> ss0;
+    vector<string> ss1;
+    string nombre = ss[3];
+    ss0 = separador(ss[1], ',');
+    // cout << "nombre --> " << nombre << endl;
+    tabla t;
+    if (dd.existeTabla(nombre, t)) {
+        if (ss[1].compare("*") == 0) {
+            cout << "t.bloqueInicial " << t.bloqueInicial << endl;
+            
+
+
+
+        } else {
+            cout << "no *" << ss[1] << endl;
+        }
+        return 1;
+    } else {
+        return 0;
+    }
+
+    //ss0 tiene los valores que se desean seleccionar, puede que solo sea "*" - todos los valores de la tabla-
+    //for (int i = 0; i < ss0.size(); i++)
+    //    cout << ss0[i] + "\n";
+    if (ss.size() > 4) {
+        //en dado caso que tuviera where la sentencia
+        for (int i = 4; i < ss.size(); i += 2)
+            ss1.push_back(ss[i]);
+        cout << "size --->" << ss1.size() << endl;
+        //ss1 tiene los valores del where (sin ands y ors)
+    }
+    return true;
+
 }
 
 

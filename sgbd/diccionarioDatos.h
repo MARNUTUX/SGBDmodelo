@@ -31,7 +31,8 @@ public:
     int existeTabla(string, tabla&);//agreog de lo de minor
     list<pivote> pivotes;
     string toString();
-
+    int actualizaBloquesTabla(string, int, int);
+    
     int miPivote; // falta serializarlo
 private:
     list<tablespace> tablespaces;

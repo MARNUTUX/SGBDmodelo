@@ -19,8 +19,8 @@ struct columna {
 
 struct tabla {
     string nombre;
-    string bloqueInicial;
-    string bloqueFinal;
+    int bloqueInicial;
+    int bloqueFinal;
     list<columna> columnas;
 };
 
