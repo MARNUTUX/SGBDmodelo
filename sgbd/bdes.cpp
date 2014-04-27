@@ -72,6 +72,8 @@ int bdes::compresor(string ts, diccionarioDatos& dd) {
     int pivoteV = 0;
     int posNx = 0;
     int gcount = 0;
+    int inicio = -1;
+    int fin = -1;
     list<pivote> lstPiv;
     do {
         size_t n = 0;
@@ -80,31 +82,42 @@ int bdes::compresor(string ts, diccionarioDatos& dd) {
         pivoteV = is.tellg();
         printf("pivote-->%d\n", pivoteV);
         if (gcount) {
-            is.seekg(pivoteV-sizeof(size_t));
+            is.seekg(pivoteV - sizeof (size_t));
             bd = *deserializarBloque(is);
-            if(bd.estado){
+            if (bd.estado) {
+                inicio = os.tellp();
                 serializarBloque(os, bd, posNx);
-                for(std::list<pivote>::iterator it = lstPiv.begin(); it != lstPiv.end(); ++it) {                    
-                    if((*it).tabla.compare(bd.tabla)) {
-                        int posAnterior = (*it).pivote;
-                        (*it).pivote = bd.next;
-                        modificarNext(DEFAULT, posAnterior, bd.posInicial);
-                    } else {
-                        (*it).pivote = bd.next;
-                        (*it).tabla = bd.tabla;
-                        lstPiv.push_front((*it));
-                        
+                fin = os.tellp();
+                pivote* p0 = 0;
+                
+                for (std::list<pivote>::iterator it = lstPiv.begin(); it != lstPiv.end(); ++it) {
+                    if ((*it).tabla.compare(bd.tabla)) {
+                        p0 = &(*it);
                     }
                 }
-                // lista de pivotes accion igual a insertar
+                if (p0 != 0) {
+                    int posAnterior = p0->pivote;
+                    p0->pivote = bd.next;
+                    modificarNext(DEFAULT, posAnterior, inicio);
+                    dd.actualizaBloquesTabla(bd.tabla, inicio, inicio, 0);
+                } else {
+                    p0 = new pivote;
+                    p0->pivote = bd.next;
+                    p0->tabla = bd.tabla;
+                    lstPiv.push_front(*p0);
+                    dd.actualizaBloquesTabla(bd.tabla, inicio, inicio, 1);
+                }
+
             }
         }
-    } while (gcount);   
+    } while (gcount);
     is.close();
+    dd.miPivote = os.tellp();
     os.close();
     remove(ts.c_str());
     rename(str.c_str(), ts.c_str());
     dd.pivotes = lstPiv;
+    cout << "\n\n\n---->pivotes--> " << dd.pivotes.front().pivote << endl;
 }
 
 int bdes::modificarNext(string ts, int& pos, int valor) {
@@ -112,20 +125,20 @@ int bdes::modificarNext(string ts, int& pos, int valor) {
     ts.append(".dbf");
     os.open(ts.c_str(), ios::in | ios::out | ios::binary);
     os.seekp(pos);
-    std::cout<<"modificarNext ---> "<<valor<<std::endl;
-    os.write(reinterpret_cast<char*>(&valor), sizeof(int));
+    std::cout << "modificarNext ---> " << valor << std::endl;
+    os.write(reinterpret_cast<char*> (&valor), sizeof (int));
     os.close();
 }
 
 int bdes::borrador(string ts, int pos) {
     ts.append(".dbf");
-    cout<<"POOSS --->     "<<pos<<endl;
+    cout << "POOSS --->     " << pos << endl;
     pos += getPosEstado(ts, pos);
     ofstream os;
     os.open(ts.c_str(), ios::in | ios::out | ios::binary);
-    cout<<"POOSS --->     "<<pos<<endl;
+    cout << "POOSS --->     " << pos << endl;
     os.seekp(pos);
-    sb.serialize(os, 0); 
+    sb.serialize(os, 0);
     os.close();
     // cambiar el next anterior
 }
@@ -134,21 +147,19 @@ int bdes::serializarBloque(ofstream& os, bloqueDato& bd, int& posNx) {
     sb.serialize(os, bd.tabla);
     sb.serialize(os, bd.estado);
     posNx = os.tellp();
-    os.write(reinterpret_cast<char*>(&bd.next), sizeof(int));
+    os.write(reinterpret_cast<char*> (&bd.next), sizeof (int));
     int tam = bd.datos.size();
     sb.serialize(os, tam);
     for (std::list<string>::iterator it = bd.datos.begin(); it != bd.datos.end(); ++it)
         serialize(os, *it);
 }
 
-
-
 bloqueDato* bdes::deserializarBloque(ifstream& is) {
     bloqueDato* bd = new bloqueDato;
     bd->tabla = sb.deserializeString(is);
     bd->estado = sb.deserializeInt(is);
     int nx = -2;
-    is.read(reinterpret_cast<char*>(&nx), sizeof(int));
+    is.read(reinterpret_cast<char*> (&nx), sizeof (int));
     bd->next = nx;
     //bd->next = sb.deserializeInt(is);
     int tam = deserializeInt(is);
@@ -156,7 +167,6 @@ bloqueDato* bdes::deserializarBloque(ifstream& is) {
         bd->datos.push_front(deserializeString(is));
     return bd;
 }
-
 
 int bdes::getPosEstado(string nom, int pos) {
     ifstream is;
@@ -167,7 +177,7 @@ int bdes::getPosEstado(string nom, int pos) {
     int tam = n;
     pos = tam + sizeof (size_t);
     is.close();
-    cout<<"getPosEstado"<<pos<<endl;
+    cout << "getPosEstado" << pos << endl;
     return pos;
 }
 

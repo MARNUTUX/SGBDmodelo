@@ -31,9 +31,11 @@ public:
     int existeTabla(string, tabla&);//agreog de lo de minor
     list<pivote> pivotes;
     string toString();
-    int actualizaBloquesTabla(string, int, int);
+    int actualizaBloquesTabla(string, int, int, int);
     pivote* getPivote(string);
-    
+    int eliminaTabla(string);
+    int eliminaPivote(string);
+    bool esIgual (string, string);
     int miPivote; // falta serializarlo
 private:
     list<tablespace> tablespaces;

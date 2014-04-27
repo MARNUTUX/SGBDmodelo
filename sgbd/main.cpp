@@ -5,7 +5,7 @@
 using namespace std;
 
 int ayuda() {
-    cout << "Las operaciones basicas son create, insert, delete, select y update" << endl;
+    cout << "Las operaciones basicas son create, insert, delete, select, update, compress" << endl;
     cout << "Algunos Ejemplos" << endl;
     cout << "create table t3 ( x int,y varchar[5],z int );" << endl;
     cout << "insert into t3 values( 0,dfggf,33 );" << endl;
@@ -41,17 +41,21 @@ int menu() {
 
 int main() {
     //menu();
+    //    remove("default.dbf");
+    //    remove("system.dbf");
     sgbd sg = sgbd();
-            sg.reconocedor("create table t3 ( x int,y varchar[5],z int );");
-    sg.reconocedor("create table t2 ( x int,z int );");
-    sg.reconocedor("insert into t3 values( 0,dfggf,33 );");
-    sg.reconocedor("insert into t2 values( 0,33 );");
-    sg.reconocedor("insert into t3 values( 1,a,2 );");
-    sg.reconocedor("insert into t3 values( 2,C,3 );");
-    sg.reconocedor("insert into t3 values( 3,D,4 );");
-    sg.reconocedor("delete from t3 where a=x or y=1;");
-    //sg.reconocedor("select * from t3 where a=1 and x=qwerty or h5=h1;");
-    sg.comprimir();
+    //            sg.reconocedor("create table t3 ( x int,y varchar[5],z int );");
+    //            sg.reconocedor("create table t2 ( x int,z int );");
+    //            sg.reconocedor("insert into t3 values( 0,dfggf,33 );");
+    //sg.reconocedor("insert into t2 values( 0,33 );");
+    //sg.reconocedor("insert into t3 values( 1,a,2 );");
+    //            sg.reconocedor("insert into t3 values( 2,C,3 );");
+    //            sg.reconocedor("insert into t3 values( 3,D,4 );");
+    ////            sg.reconocedor("delete from t3 where a=x or y=1;");
+    //    //sg.reconocedor("select * from t3 where a=1 and x=qwerty or h5=h1;");
+    //            sg.comprimir();
+
+    sg.reconocedor("select * from t2 where a=1 and x=qwerty or h5=h1;");
     //sg.reconocedor("update t1 set a=b,c=1 where a=z and h=1;"); 
 
     return 1;

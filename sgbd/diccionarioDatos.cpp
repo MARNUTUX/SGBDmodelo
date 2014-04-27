@@ -164,6 +164,8 @@ int diccionarioDatos::agregarTabla(tabla t, string nombre = DEFAULT) {
 
 }
 
+
+
 tablespace* diccionarioDatos::existeTablespace(string tsP) { //***¡!***
     tablespace* ts = 0;
     tablespace tsV;
@@ -203,7 +205,35 @@ int diccionarioDatos::existeTabla(string s, tabla& tP) {
     return existe;
 }
 
-int diccionarioDatos::actualizaBloquesTabla(string s, int inicio, int final) {
+int diccionarioDatos::eliminaTabla(string s) {
+    int eliminada = 0;
+    tablespace ts;
+    std::list<tabla>::iterator aux;
+    for (std::list<tablespace>::iterator it0 = tablespaces.begin(); it0 != tablespaces.end(); ++it0) {
+        for (std::list<tabla>::iterator it = (*it0).tablas.begin(); it != (*it0).tablas.end(); ++it) {
+            if ((*it).nombre.compare(s) == 0) {
+                aux = it;
+                eliminada = 1;
+            }
+        }
+    }
+    tablespaces.front().tablas.erase(aux);
+    
+    return eliminada;
+}
+
+int diccionarioDatos::eliminaPivote(string nom) {
+    std::list<pivote>::iterator aux;
+    for(std::list<pivote>::iterator it = pivotes.begin(); it != pivotes.end(); ++it) {
+        if((*it).tabla.compare(nom) == 0) {
+            aux = it;
+        }
+    }
+    pivotes.erase(aux);
+}
+
+
+int diccionarioDatos::actualizaBloquesTabla(string s, int inicio, int final, int tipo) {
     int existe = 0;
     tablespace ts;
     tabla t0;
@@ -212,8 +242,9 @@ int diccionarioDatos::actualizaBloquesTabla(string s, int inicio, int final) {
             t0 = *it;
             if (t0.nombre.compare(s) == 0) {
                 //cout << "HALLADO111!!!!!!!!!!!!!!!!!!!" << endl;
-                if ((*it).bloqueInicial == -1) {
+                if ((*it).bloqueInicial == -1 || tipo == 1) {
                     (*it).bloqueInicial = inicio;
+                    cout<<inicio<<endl;
                 }
                 (*it).bloqueFinal = final;
                 existe = 1;
