@@ -22,9 +22,8 @@ public:
     bool reconocedor(string);
     list<bloqueDato> lstBloques;
     int comprimir();
-    
+    diccionarioDatos dd;   
 private:
-    diccionarioDatos dd;
     Parser parser;
     bdes bdess;
     int creador(tabla, string);

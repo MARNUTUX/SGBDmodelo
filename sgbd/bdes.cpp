@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <iostream>
 #include "bdes.h"
+#include "diccionarioDatos.h"
 
 bdes::bdes() {
 
@@ -59,7 +60,7 @@ int bdes::validador(string ts, int pos) {
     return valido;
 }
 
-int bdes::compresor(string ts) {
+int bdes::compresor(string ts, diccionarioDatos& dd) {
     ofstream os;
     ifstream is;
     bloqueDato bd;
@@ -83,6 +84,8 @@ int bdes::compresor(string ts) {
  //           printf("ser--->%s\n", bd.datos.front());
             if(bd.estado){
                 serializarBloque(os, bd, posNx);
+                pivote p0;
+                // lista de pivotes accion igual a insertar
             }
         }
     } while (gcount);

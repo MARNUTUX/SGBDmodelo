@@ -94,7 +94,7 @@ bool sgbd::reconocedor(string cadena) {
     } else if (ss[0] == "update") {
         //ss[1] tiene el nombre de la tabla a actualizar
         if (validaActualizador(cadena)) {
-        
+
         } else return false;
     } else if (ss[0] == "create") {
         if (creador(cadena)) {
@@ -231,6 +231,9 @@ int sgbd::seleccionador(vector<string> ss) {
                 cout << "bd.next" << bd.next << endl;
                 bdess.lector(DEFAULT, next, bd);
                 cout << "bd.nombre" << bd.tabla << endl;
+                for (std::list<string>::iterator it = bd.datos.begin(); it != bd.datos.end(); ++it) {
+                    cout<<(*it)<<endl;
+                }
                 cout << "bd.c0" << bd.datos.front() << endl;
                 bloquesSelec.push_front(bd);
 
@@ -274,11 +277,11 @@ int sgbd::borrador(vector<string> ss) {
 }
 
 int sgbd::actualizador(vector<string> ss) {
-    
+
 }
 
 int sgbd::comprimir() {
-    bdess.compresor(DEFAULT);
+    bdess.compresor(DEFAULT, dd);
 }
 
 // utiles

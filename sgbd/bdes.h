@@ -9,6 +9,7 @@
 #define	BDES_H
 #include "bloqueDato.h"
 #include "SerializadorBinario.h"
+#include "diccionarioDatos.h"
 
 
 class bdes : public SerializadorBinario {
@@ -21,7 +22,7 @@ public:
     int grabador(string, bloqueDato, int);
     int validador(string, int);
     int borrador(string, int);
-    int compresor(string);
+    int compresor(string, diccionarioDatos&);
     int modificarNext(string, int&, int);
     
 private:
