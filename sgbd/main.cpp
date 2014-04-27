@@ -28,10 +28,13 @@ int menu() {
             return 1;
         } else if (entrada.compare("help") == 0 || entrada.compare("h") == 0) {
             ayuda();
-        } if(sg.reconocedor(entrada)){
-            cout<<"  listo  ";
+        } else if (entrada.compare("compress") == 0) {
+            sg.comprimir();
+        }
+        if (sg.reconocedor(entrada)) {
+            cout << "  listo  ";
         } else {
-            cout<<"sentencia desconocida"<<endl;
+            cout << "sentencia desconocida" << endl;
         }
     }
 }

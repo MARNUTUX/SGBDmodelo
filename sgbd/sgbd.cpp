@@ -32,7 +32,7 @@ int sgbd::validaSeleccionador(string cadena) {
         return 0;
 }
 
-int sgbd::actualizador(string cadena) {
+int sgbd::validaActualizador(string cadena) {
     if (parser.actualizando(cadena)) {
         cout << cadena << endl;
         splitstring s(cadena);
@@ -89,18 +89,12 @@ bool sgbd::reconocedor(string cadena) {
         } else return false;
     } else if (ss[0] == "delete") {
         if (validaBorrador(cadena)) {
-            
+
         } else return false;
     } else if (ss[0] == "update") {
         //ss[1] tiene el nombre de la tabla a actualizar
-        if (actualizador(cadena)) {
-            ss0 = separador(ss[3], ','); //ss0 tiene los valores  a actualizar
-            if (ss.size() > 5) {
-                //en caso de que haya where ss1 tiene los valores sin ands y ors
-                for (int i = 5; i < ss.size(); i += 2)
-                    ss1.push_back(ss[i]);
-            }
-            return true;
+        if (validaActualizador(cadena)) {
+        
         } else return false;
     } else if (ss[0] == "create") {
         if (creador(cadena)) {
@@ -220,7 +214,7 @@ int sgbd::insertor(vector<string> ss) {
     return 1;
 }
 
-int  sgbd::seleccionador(vector<string> ss) {
+int sgbd::seleccionador(vector<string> ss) {
     vector<string> ss0;
     vector<string> ss1;
     vector<string> whereValues;
@@ -239,7 +233,7 @@ int  sgbd::seleccionador(vector<string> ss) {
                 cout << "bd.nombre" << bd.tabla << endl;
                 cout << "bd.c0" << bd.datos.front() << endl;
                 bloquesSelec.push_front(bd);
-                
+
                 next = bd.next;
             } while (bd.next != -1);
             lstBloques = bloquesSelec;
@@ -274,12 +268,18 @@ int  sgbd::seleccionador(vector<string> ss) {
 
 int sgbd::borrador(vector<string> ss) {
     seleccionador(ss);
-    for(std::list<bloqueDato>::iterator it = lstBloques.begin(); it != lstBloques.end(); ++it) {
+    for (std::list<bloqueDato>::iterator it = lstBloques.begin(); it != lstBloques.end(); ++it) {
         bdess.borrador((*it).tabla, (*it).posInicial);
     }
 }
 
+int sgbd::actualizador(vector<string> ss) {
+    
+}
 
+int sgbd::comprimir() {
+    bdess.compresor(DEFAULT);
+}
 
 // utiles
 

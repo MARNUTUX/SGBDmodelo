@@ -21,14 +21,14 @@ public:
     sgbd();
     bool reconocedor(string);
     list<bloqueDato> lstBloques;
-
+    int comprimir();
+    
 private:
     diccionarioDatos dd;
     Parser parser;
     bdes bdess;
     int creador(tabla, string);
     int creador(string);
-    int actualizador(string);
 
 
     //utiles
@@ -43,11 +43,14 @@ private:
     bool validaNumeros(string);
     int validaSeleccionador(string);
     int validaBorrador(string);
+    int validaActualizador(string);
 
     //operaciones basicas
     int insertor(vector<string>);
     int seleccionador(vector<string>);
     int borrador(vector<string>);
+    int actualizador(vector<string>);
+
 };
 
 
