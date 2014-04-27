@@ -13,6 +13,7 @@ int ayuda() {
     cout << "select * from t3 where a=1 and x=qwerty or h5=h1;" << endl;
     cout << "update t1 set a=b,c=1 where a=z and h=1;" << endl;
     cout << "¡Se debe de tener cuidado con espacios!" << endl;
+    cin.get();
 }
 
 int menu() {
@@ -24,7 +25,7 @@ int menu() {
         cout << "> ";
         cin >> entrada;
         if (entrada.compare("exit") == 0 || entrada.compare("quit") == 0 ||
-                entrada.compare("qs")) {
+                entrada.compare("q") == 0) {
             return 1;
         } else if (entrada.compare("help") == 0 || entrada.compare("h") == 0) {
             ayuda();
@@ -32,7 +33,7 @@ int menu() {
             sg.comprimir();
         }
         if (sg.reconocedor(entrada)) {
-            cout << "  listo  ";
+            cout << ">";
         } else {
             cout << "sentencia desconocida" << endl;
         }
@@ -61,8 +62,7 @@ int prueba() {
 }
 
 int main() {
-    //menu();
-    
-
+        menu();
+    //cout<<"holamundo"<<endl;
     return 1;
 }
