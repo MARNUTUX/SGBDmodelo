@@ -94,7 +94,7 @@ bool sgbd::reconocedor(string cadena) {
     } else if (ss[0] == "update") {
         //ss[1] tiene el nombre de la tabla a actualizar
         if (validaActualizador(cadena)) {
-
+            actualizador(ss);
         } else return false;
     } else if (ss[0] == "create") {
         if (creador(cadena)) {
@@ -188,14 +188,14 @@ int sgbd::insertor(vector<string> ss) {
             bdess.escritor(DEFAULT, bd, next, posInicial, posFinal, posEscribe);
             dd.miPivote = posFinal;
             pivote *p0;
-            
+
             dd.actualizaBloquesTabla(t.nombre, posInicial, posInicial, 0);
             p0 = dd.getPivote(nombre);
 
             if (p0 != 0) {
                 cout << "posPivote................>> " << p0->pivote << endl;
                 int posAnterior = p0->pivote;
-                p0->pivote = next; 
+                p0->pivote = next;
                 cout << "posPivote................>> " << p0->pivote << endl;
                 bdess.modificarNext(DEFAULT, posAnterior, posInicial);
             } else {
@@ -226,10 +226,10 @@ int sgbd::seleccionador(vector<string> ss) {
     list<bloqueDato> bloquesSelec; //lista devuelve lista bloques
     if (dd.existeTabla(nombre, t)) {
         if (ss[1].compare("*") == 0) {
-                    
+
             bloqueDato bd;
             int next = t.bloqueInicial;
-            cout<<"next----->   "<< next <<endl;
+            cout << "next----->   " << next << endl;
             do {
                 bdess.lector(DEFAULT, next, bd);
                 if (bd.estado) {
@@ -237,13 +237,13 @@ int sgbd::seleccionador(vector<string> ss) {
                     for (std::list<string>::iterator it = bd.datos.begin(); it != bd.datos.end(); ++it) {
                         cout << "c -> " << (*it) << endl;
                     }
-                    
+
                 } else {
-                    cout<<"registro borrado"<<endl;
+                    cout << "registro borrado" << endl;
                 }
                 bloquesSelec.push_front(bd);
                 next = bd.next;
-                cout<<"Next----->   "<< next <<endl;
+                cout << "Next----->   " << next << endl;
             } while (bd.next != -1);
             lstBloques = bloquesSelec;
         } else {
@@ -279,18 +279,20 @@ int sgbd::borrador(vector<string> ss) {
     //lstBloques;
     tabla t0;
     bloqueDato bd;
+    list<bloqueDato> bloquesSelec;
     if (dd.existeTabla(ss[2], t0)) {
         int next = t0.bloqueInicial;
         do {
-            cout << "NEXT  -.-.-.-> " << next << endl;
+            //cout << "NEXT  -.-.-.-> " << next << endl;
             bdess.borrador(DEFAULT, next);
             bdess.lector(DEFAULT, next, bd);
+            bloquesSelec.push_front(bd);
             next = bd.next;
+            //bdess.borrador(DEFAULT, bd.posInicial);
+            //{<imprime solo>
             cout << "next---->      " << next << endl;
             cout << "posInicial---->" << bd.posInicial << endl;
             cout << "estado-------->" << bd.estado << endl;
-            //bdess.borrador(DEFAULT, bd.posInicial);
-            //{<imprime solo>
             cout << "bd.next" << bd.next << endl;
             cout << "bd.nombre" << bd.tabla << endl;
             for (std::list<string>::iterator it = bd.datos.begin(); it != bd.datos.end(); ++it) {
@@ -303,18 +305,84 @@ int sgbd::borrador(vector<string> ss) {
         for (std::list<bloqueDato>::iterator it = lstBloques.begin(); it != lstBloques.end(); ++it) {
             bdess.borrador((*it).tabla, (*it).posInicial);
         }
+        lstBloques = bloquesSelec;
         dd.eliminaTabla(ss[2]);
         dd.eliminaPivote(ss[2]);
     }
 }
 
 int sgbd::actualizador(vector<string> ss) {
-
+    tabla t0;
+    string sentencia0 = "delete from ";
+    sentencia0.append(ss[1]);
+    std::list<string>::iterator auxIt;
+    if (dd.existeTabla(ss[1], t0)) {
+        reconocedor(sentencia0);
+        list<columna> columnas = t0.columnas;
+        creaTabla(ss[1], columnas);
+        for (std::list<bloqueDato>::iterator it = lstBloques.begin(); it != lstBloques.end(); ++it) {
+            string sent = "insert into ";
+            sent.append(ss[1]);
+            sent.append(" values( ");
+            for (std::list<string>::iterator it1 = (*it).datos.begin(); it1 != (*it).datos.end(); ++it1) {
+                sent.append((*it1));
+                auxIt = it1;
+                ++auxIt;
+                if (auxIt != (*it).datos.end())
+                    sent.append(",");
+            }
+            sent.append(" );");
+            cout << "sentencia -> " << sent << endl;
+            reconocedor(sent);
+            //"insert into t3 values( 0,dfggf,33 );"
+        }
+    } else {
+        cerr << "no update" << endl;
+    }
 }
 
 int sgbd::comprimir() {
     bdess.compresor(DEFAULT, dd);
+
 }
 
 // utiles
+/*
+int sgbd::actualizador(vector<string> ss) {
+    tabla t0;
+    if (dd.existeTabla(ss[1], t0)) {
+        bloqueDato bd;
+        seleccionador(ss);
+        borrador(ss);
+        //ss[3]=> a=b,c=1 vector<string> sval = separador(ss[3],',');
+        vector<string> snam;
+        list<bloqueDato> bh = lstBloques;
+        for (int i = 0; i < sval.size(); i++) {
+            if (!snam.empty())snam.clear();
+            snam = separador(sval[i], '=');
+            int pos;
+            if (dd.posColumnaEnTabla(ss[1], snam[0], pos) > 0) {
+                list<string> ch;
+                for (int j = 0; j < bh.size(); j++) {
+                    if (!ch.empty())ch.clear();
+                    ch = bh.front().datos;
+                    for (int k = 0; k < ch.size(); k++) {
+                        if (k == pos) { //elimina y vuelve a insertar el valor nuevo
 
+                        }
+                    }
+                }
+                bh.pop_front();
+            }
+            for (int j = 0; j < bh.size(); j++) { //escribe de nuevo todos los bloques del tablespace 
+
+            }
+            bdess.escritor(DEFAULT, bh.front());
+            bh.pop_front();
+        }
+    } else {
+        cout << "no existe esta columna\n";
+        return -1;
+    }
+}
+ */

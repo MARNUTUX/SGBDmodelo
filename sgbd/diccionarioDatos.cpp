@@ -164,8 +164,6 @@ int diccionarioDatos::agregarTabla(tabla t, string nombre = DEFAULT) {
 
 }
 
-
-
 tablespace* diccionarioDatos::existeTablespace(string tsP) { //***¡!***
     tablespace* ts = 0;
     tablespace tsV;
@@ -218,20 +216,19 @@ int diccionarioDatos::eliminaTabla(string s) {
         }
     }
     tablespaces.front().tablas.erase(aux);
-    
+
     return eliminada;
 }
 
 int diccionarioDatos::eliminaPivote(string nom) {
     std::list<pivote>::iterator aux;
-    for(std::list<pivote>::iterator it = pivotes.begin(); it != pivotes.end(); ++it) {
-        if((*it).tabla.compare(nom) == 0) {
+    for (std::list<pivote>::iterator it = pivotes.begin(); it != pivotes.end(); ++it) {
+        if ((*it).tabla.compare(nom) == 0) {
             aux = it;
         }
     }
     pivotes.erase(aux);
 }
-
 
 int diccionarioDatos::actualizaBloquesTabla(string s, int inicio, int final, int tipo) {
     int existe = 0;
@@ -244,7 +241,7 @@ int diccionarioDatos::actualizaBloquesTabla(string s, int inicio, int final, int
                 //cout << "HALLADO111!!!!!!!!!!!!!!!!!!!" << endl;
                 if ((*it).bloqueInicial == -1 || tipo == 1) {
                     (*it).bloqueInicial = inicio;
-                    cout<<inicio<<endl;
+                    cout << inicio << endl;
                 }
                 (*it).bloqueFinal = final;
                 existe = 1;
@@ -256,10 +253,23 @@ int diccionarioDatos::actualizaBloquesTabla(string s, int inicio, int final, int
 
 pivote* diccionarioDatos::getPivote(string nomTabla) {
     pivote* p0 = 0;
-    for(std::list<pivote>::iterator it = pivotes.begin(); it != pivotes.end(); ++it) {
-        if((*it).tabla.compare(nomTabla) == 0) {
+    for (std::list<pivote>::iterator it = pivotes.begin(); it != pivotes.end(); ++it) {
+        if ((*it).tabla.compare(nomTabla) == 0) {
             p0 = &(*it);
         }
     }
     return p0;
 }
+/*
+int diccionarioDatos::posColumnaEnTabla(string tab, string col, int& posCol) {
+    tabla t;
+    if (existeTabla(tab, t)) {
+        list<columna> ch = t.columnas;
+        for (int i = 0; i < ch.size(); i++) {
+            columna aux = ch.front();
+            if ((aux.nombre.compare(col) == 0)) return i;
+            ch.pop_front();
+        }
+    }
+    return -1;
+}*/

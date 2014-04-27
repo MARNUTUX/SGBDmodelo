@@ -58,11 +58,12 @@ int prueba() {
     //    sg.comprimir();
 
     sg.reconocedor("select * from t3 where a=1 and x=qwerty or h5=h1;");
-    //sg.reconocedor("update t1 set a=b,c=1 where a=z and h=1;"); 
+    sg.reconocedor("update t3 set a=b,c=1 where a=z and h=1;"); 
 }
 
 int main() {
-        menu();
+      //  menu();
+    prueba();
     //cout<<"holamundo"<<endl;
     return 1;
 }
