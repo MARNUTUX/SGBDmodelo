@@ -75,58 +75,77 @@ int bdes::compresor(string ts, diccionarioDatos& dd) {
     int inicio = -1;
     int fin = -1;
     list<pivote> lstPiv;
+    int posAnterior = -1;
+    int auxPos;
     do {
+        cout<<"0cout__--__--> "<<os.tellp()<<endl;
         size_t n = 0;
         is.read((char*) &n, sizeof (size_t));
         gcount = is.gcount();
         pivoteV = is.tellg();
-        printf("pivote-->%d\n", pivoteV);
         if (gcount) {
             is.seekg(pivoteV - sizeof (size_t));
             bd = *deserializarBloque(is);
-            if (bd.estado) {
+            bd.next = -1;
+            if (bd.estado) {                
                 inicio = os.tellp();
                 serializarBloque(os, bd, posNx);
+                bd.next = posNx;
                 fin = os.tellp();
                 pivote* p0 = 0;
                 
                 for (std::list<pivote>::iterator it = lstPiv.begin(); it != lstPiv.end(); ++it) {
-                    if ((*it).tabla.compare(bd.tabla)) {
+                    if ((*it).tabla.compare(bd.tabla) == 0) {
                         p0 = &(*it);
                     }
                 }
                 if (p0 != 0) {
-                    int posAnterior = p0->pivote;
+                    
+                    posAnterior = p0->pivote;
                     p0->pivote = bd.next;
-                    modificarNext(DEFAULT, posAnterior, inicio);
+                    cout<<"1cout__--__--> "<<os.tellp()<<endl;
+                    auxPos = os.tellp();
+                    os.seekp(posAnterior);
+                    cout<<"2cout__--__--> "<<os.tellp()<<endl;
+                    os.write(reinterpret_cast<char*> (&inicio), sizeof (int));
+                    os.seekp(auxPos);
+                    //modificarNext(DEFAULT, posAnterior, inicio);
+                    cout<<"3cout__--__--> "<<os.tellp()<<endl;
                     dd.actualizaBloquesTabla(bd.tabla, inicio, inicio, 0);
+                    
                 } else {
                     p0 = new pivote;
                     p0->pivote = bd.next;
-                    p0->tabla = bd.tabla;
+                    p0->tabla = bd.tabla;                    
                     lstPiv.push_front(*p0);
                     dd.actualizaBloquesTabla(bd.tabla, inicio, inicio, 1);
                 }
-
+            
             }
         }
+        
     } while (gcount);
     is.close();
     dd.miPivote = os.tellp();
     os.close();
-    remove(ts.c_str());
-    rename(str.c_str(), ts.c_str());
+    //remove(ts.c_str());
+    //rename(str.c_str(), ts.c_str());
     dd.pivotes = lstPiv;
-    cout << "\n\n\n---->pivotes--> " << dd.pivotes.front().pivote << endl;
+    //cout << "\n\n\n---->pivotes--> " << dd.pivotes.front().pivote << endl;
 }
 
 int bdes::modificarNext(string ts, int& pos, int valor) {
     ofstream os;
     ts.append(".dbf");
     os.open(ts.c_str(), ios::in | ios::out | ios::binary);
-    os.seekp(pos);
-    std::cout << "modificarNext ---> " << valor << std::endl;
-    os.write(reinterpret_cast<char*> (&valor), sizeof (int));
+    if(os.good()) {
+        cout<<"modificandoNext"<<endl;
+        os.seekp(pos);
+        std::cout << "modificarNext ---> " << valor << std::endl;
+        os.write(reinterpret_cast<char*> (&valor), sizeof (int));
+    } else {
+        cerr<<"Error Archivo"<<endl;
+    }
     os.close();
 }
 
@@ -145,13 +164,14 @@ int bdes::borrador(string ts, int pos) {
 
 int bdes::serializarBloque(ofstream& os, bloqueDato& bd, int& posNx) {
     sb.serialize(os, bd.tabla);
+    cout<<"tabla "<<bd.tabla<<endl;
     sb.serialize(os, bd.estado);
     posNx = os.tellp();
     os.write(reinterpret_cast<char*> (&bd.next), sizeof (int));
     int tam = bd.datos.size();
     sb.serialize(os, tam);
     for (std::list<string>::iterator it = bd.datos.begin(); it != bd.datos.end(); ++it)
-        serialize(os, *it);
+        sb.serialize(os, *it);
 }
 
 bloqueDato* bdes::deserializarBloque(ifstream& is) {
@@ -164,7 +184,7 @@ bloqueDato* bdes::deserializarBloque(ifstream& is) {
     //bd->next = sb.deserializeInt(is);
     int tam = deserializeInt(is);
     for (int i = 0; i < tam; i++)
-        bd->datos.push_front(deserializeString(is));
+        bd->datos.push_back(deserializeString(is));
     return bd;
 }
 

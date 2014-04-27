@@ -195,7 +195,7 @@ int sgbd::insertor(vector<string> ss) {
             if (p0 != 0) {
                 cout << "posPivote................>> " << p0->pivote << endl;
                 int posAnterior = p0->pivote;
-                p0->pivote = next; //next??
+                p0->pivote = next; 
                 cout << "posPivote................>> " << p0->pivote << endl;
                 bdess.modificarNext(DEFAULT, posAnterior, posInicial);
             } else {
@@ -235,14 +235,15 @@ int sgbd::seleccionador(vector<string> ss) {
                 if (bd.estado) {
                     cout << "bd.nombre" << bd.tabla << endl;
                     for (std::list<string>::iterator it = bd.datos.begin(); it != bd.datos.end(); ++it) {
-                        cout << (*it) << endl;
+                        cout << "c -> " << (*it) << endl;
                     }
-                    cout << "bd.c0" << bd.datos.front() << endl;
+                    
                 } else {
                     cout<<"registro borrado"<<endl;
                 }
                 bloquesSelec.push_front(bd);
                 next = bd.next;
+                cout<<"Next----->   "<< next <<endl;
             } while (bd.next != -1);
             lstBloques = bloquesSelec;
         } else {
