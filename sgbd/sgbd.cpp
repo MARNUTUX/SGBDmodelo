@@ -202,17 +202,17 @@ int sgbd::insertor(vector<string> ss) {
             pivote *p0;
             dd.actualizaBloquesTabla(t.nombre, posInicial, posInicial);
             p0 = dd.getPivote(nombre);
-            
+
             if (p0 != 0) {
-                cout<<"posPivote................>> "<<p0->pivote<<endl;                
+                cout << "posPivote................>> " << p0->pivote << endl;
                 int posAnterior = p0->pivote;
                 p0->pivote = posInicial;
-                cout<<"posPivote................>> "<<p0->pivote<<endl;
+                cout << "posPivote................>> " << p0->pivote << endl;
                 bdess.modificarNext(DEFAULT, posAnterior, p0->pivote);
             } else {
                 p0 = new pivote;
                 p0->pivote = next;
-                cout<<"posPivote................>> "<<p0->pivote<<endl;
+                cout << "posPivote................>> " << p0->pivote << endl;
                 p0->tabla = nombre;
                 dd.pivotes.push_front(*p0);
             }
@@ -235,12 +235,15 @@ int sgbd::seleccionador(vector<string> ss) {
     tabla t;
     if (dd.existeTabla(nombre, t)) {
         if (ss[1].compare("*") == 0) {
-            cout << "t.bloqueInicial " << t.bloqueInicial << endl;
             bloqueDato bd;
-            bdess.lector(DEFAULT, t.bloqueInicial, bd);
-            cout<<"nombreTabla  -> " <<bd.tabla<<endl;
-            cout<<"pivoteNx     -> "  <<bd.next<<endl;
-
+            int next = t.bloqueInicial;
+            do {
+                cout<<"bd.next"<<bd.next<<endl;                
+                bdess.lector(DEFAULT, next, bd);
+                cout<<"bd.nombre"<<bd.tabla<<endl;
+                cout<<"bd.c0"<<bd.datos.front()<<endl;
+                next = bd.next;
+            } while (bd.next != -1);
 
         } else {
             cout << "no *" << ss[1] << endl;

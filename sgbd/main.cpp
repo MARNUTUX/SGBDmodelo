@@ -34,7 +34,7 @@ using namespace std;
 //    bd = *getBloque();
 //    //es.lector(ts, 50, bd);
 //    //printf("nombre tabla --> %s\n", bd.datos.front().nombreColumna.c_str());
-//     bd.tabla = "t1";
+////     bd.tabla = "t1";
 //     es.grabador(ts, bd, 0);
 ////     es.lector(ts, 0, bd);
 ///*     printf("nombre tabla --> %s\n", bd.tabla.c_str());*/
@@ -49,11 +49,13 @@ using namespace std;
 
 int main() {
     sgbd sg = sgbd();
-    sg.reconocedor("create table t3 ( x int,y varchar[5],z int );");
-    sg.reconocedor("insert into t3 values( 0,dfggf,33 );");
-    sg.reconocedor("insert into t3 values( 0,dfggf,33 );");  
+//    sg.reconocedor("create table t3 ( x int,y varchar[5],z int );");
+//    sg.reconocedor("create table t2 ( x int,z int );");
+//    sg.reconocedor("insert into t3 values( 0,dfggf,33 );");
+//    sg.reconocedor("insert into t2 values( 0,33 );");
+//    sg.reconocedor("insert into t3 values( 1,a,2 );");
     //sg.reconocedor("delete from t1 where a=x or y=1;");
-    sg.reconocedor("select * from t3 where a=1 and x=qwerty or h5=h1;"); 
+    sg.reconocedor("select * from t3 where a=1 and x=qwerty or h5=h1;");
 
     //sg.reconocedor("update t1 set a=b,c=1 where a=z and h=1;"); 
 
