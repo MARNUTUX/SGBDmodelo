@@ -280,6 +280,7 @@ int sgbd::borrador(vector<string> ss) {
     tabla t0;
     bloqueDato bd;
     list<bloqueDato> bloquesSelec;
+    cout<<"ss[2]"<<ss[2]<<endl;
     if (dd.existeTabla(ss[2], t0)) {
         int next = t0.bloqueInicial;
         do {
@@ -308,6 +309,8 @@ int sgbd::borrador(vector<string> ss) {
         lstBloques = bloquesSelec;
         dd.eliminaTabla(ss[2]);
         dd.eliminaPivote(ss[2]);
+    } else {
+        cout<<"no existe tabla"<<endl;
     }
 }
 
@@ -315,6 +318,8 @@ int sgbd::actualizador(vector<string> ss) {
     tabla t0;
     string sentencia0 = "delete from ";
     sentencia0.append(ss[1]);
+    sentencia0.append(" where a=x or y=1;;");
+    cout<<"sentencia0---:-> "<<sentencia0<<endl;
     std::list<string>::iterator auxIt;
     if (dd.existeTabla(ss[1], t0)) {
         reconocedor(sentencia0);
@@ -323,10 +328,11 @@ int sgbd::actualizador(vector<string> ss) {
         for (std::list<bloqueDato>::iterator it = lstBloques.begin(); it != lstBloques.end(); ++it) {
             string sent = "insert into ";
             sent.append(ss[1]);
+            
             sent.append(" values( ");
             for (std::list<string>::iterator it1 = (*it).datos.begin(); it1 != (*it).datos.end(); ++it1) {
-                sent.append((*it1));
-                auxIt = it1;
+                //sent.append(XXXX);   mae aca van los valores nuevos <-------------------------
+                auxIt = it1; 
                 ++auxIt;
                 if (auxIt != (*it).datos.end())
                     sent.append(",");
