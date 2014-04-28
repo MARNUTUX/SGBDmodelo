@@ -63,8 +63,8 @@ int prueba() {
 }
 
 int main() {
-    //  menu();
-    prueba();
+    menu();
+    //prueba();
     //cout<<"holamundo"<<endl;
     return 1;
 }
